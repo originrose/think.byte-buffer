@@ -58,127 +58,113 @@ public class ByteBuffer extends think.byte_buffer.presets.ByteBuffer {
 	Double = 5;
     }
 
-    @Namespace("think::byte_buffer") @NoOffset public static class TypedBuffer extends Pointer {
-        static { Loader.load(); }
-        /** Pointer cast constructor. Invokes {@link Pointer#Pointer(Pointer)}. */
-        public TypedBuffer(Pointer p) { super(p); }
-        /** Native array allocator. Access with {@link Pointer#position(long)}. */
-        public TypedBuffer(long size) { super((Pointer)null); allocateArray(size); }
-        private native void allocateArray(long size);
-        @Override public TypedBuffer position(long position) {
-            return (TypedBuffer)super.position(position);
-        }
-    
-      @MemberGetter public native @Cast("const int64_t") long m_buffer();
-      @MemberGetter public native @Cast("const int64_t") long m_length();
-      @MemberGetter public native @Cast("const think::byte_buffer::Datatype::Enum") int m_datatype();
-      public TypedBuffer( @Cast("int64_t") long buf, @Cast("int64_t") long len, @Cast("think::byte_buffer::Datatype::Enum") int dtype ) { super((Pointer)null); allocate(buf, len, dtype); }
-      private native void allocate( @Cast("int64_t") long buf, @Cast("int64_t") long len, @Cast("think::byte_buffer::Datatype::Enum") int dtype );
-      public TypedBuffer() { super((Pointer)null); allocate(); }
-      private native void allocate();
-      public TypedBuffer( @Const @ByRef TypedBuffer other ) { super((Pointer)null); allocate(other); }
-      private native void allocate( @Const @ByRef TypedBuffer other );
-    }
-
     @Namespace("think::byte_buffer") public static class BufferManager extends Pointer {
         static { Loader.load(); }
         /** Pointer cast constructor. Invokes {@link Pointer#Pointer(Pointer)}. */
         public BufferManager(Pointer p) { super(p); }
     
-      public native @ByVal @Name("allocate") TypedBuffer _allocate( @Cast("int64_t") long size, @Cast("const char*") BytePointer file, int line );
-      public native @ByVal @Name("allocate") TypedBuffer _allocate( @Cast("int64_t") long size, String file, int line );
-      public native void release( @Cast("int64_t") long data);
+      public native @Cast("int64_t") long allocate_buffer( @Cast("int64_t") long size, @Cast("const char*") BytePointer file, int line );
+      public native @Cast("int64_t") long allocate_buffer( @Cast("int64_t") long size, String file, int line );
+      public native void release_buffer( @Cast("int64_t") long data);
 
-      public native void copy( @ByVal TypedBuffer src, @Cast("int64_t") long src_offset,
-      			 @Cast("char*") BytePointer dst, @Cast("int64_t") long offset, @Cast("int64_t") long n_elems );
-      public native void copy( @ByVal TypedBuffer src, @Cast("int64_t") long src_offset,
-      			 @Cast("char*") ByteBuffer dst, @Cast("int64_t") long offset, @Cast("int64_t") long n_elems );
-      public native void copy( @ByVal TypedBuffer src, @Cast("int64_t") long src_offset,
-      			 @Cast("char*") byte[] dst, @Cast("int64_t") long offset, @Cast("int64_t") long n_elems );
-      public native void copy( @ByVal TypedBuffer src, @Cast("int64_t") long src_offset,
+      public native void copy( @Cast("int64_t") long src_data, @Cast("think::byte_buffer::Datatype::Enum") int src_type, @Cast("int64_t") long src_offset,
+      			 @Cast("unsigned char*") BytePointer dst, @Cast("int64_t") long offset, @Cast("int64_t") long n_elems );
+      public native void copy( @Cast("int64_t") long src_data, @Cast("think::byte_buffer::Datatype::Enum") int src_type, @Cast("int64_t") long src_offset,
+      			 @Cast("unsigned char*") ByteBuffer dst, @Cast("int64_t") long offset, @Cast("int64_t") long n_elems );
+      public native void copy( @Cast("int64_t") long src_data, @Cast("think::byte_buffer::Datatype::Enum") int src_type, @Cast("int64_t") long src_offset,
+      			 @Cast("unsigned char*") byte[] dst, @Cast("int64_t") long offset, @Cast("int64_t") long n_elems );
+      public native void copy( @Cast("int64_t") long src_data, @Cast("think::byte_buffer::Datatype::Enum") int src_type, @Cast("int64_t") long src_offset,
       			 ShortPointer dst, @Cast("int64_t") long dst_offset, @Cast("int64_t") long n_elems );
-      public native void copy( @ByVal TypedBuffer src, @Cast("int64_t") long src_offset,
+      public native void copy( @Cast("int64_t") long src_data, @Cast("think::byte_buffer::Datatype::Enum") int src_type, @Cast("int64_t") long src_offset,
       			 ShortBuffer dst, @Cast("int64_t") long dst_offset, @Cast("int64_t") long n_elems );
-      public native void copy( @ByVal TypedBuffer src, @Cast("int64_t") long src_offset,
+      public native void copy( @Cast("int64_t") long src_data, @Cast("think::byte_buffer::Datatype::Enum") int src_type, @Cast("int64_t") long src_offset,
       			 short[] dst, @Cast("int64_t") long dst_offset, @Cast("int64_t") long n_elems );
-      public native void copy( @ByVal TypedBuffer src, @Cast("int64_t") long src_offset,
+      public native void copy( @Cast("int64_t") long src_data, @Cast("think::byte_buffer::Datatype::Enum") int src_type, @Cast("int64_t") long src_offset,
       			 IntPointer dst, @Cast("int64_t") long dst_offset, @Cast("int64_t") long n_elems );
-      public native void copy( @ByVal TypedBuffer src, @Cast("int64_t") long src_offset,
+      public native void copy( @Cast("int64_t") long src_data, @Cast("think::byte_buffer::Datatype::Enum") int src_type, @Cast("int64_t") long src_offset,
       			 IntBuffer dst, @Cast("int64_t") long dst_offset, @Cast("int64_t") long n_elems );
-      public native void copy( @ByVal TypedBuffer src, @Cast("int64_t") long src_offset,
+      public native void copy( @Cast("int64_t") long src_data, @Cast("think::byte_buffer::Datatype::Enum") int src_type, @Cast("int64_t") long src_offset,
       			 int[] dst, @Cast("int64_t") long dst_offset, @Cast("int64_t") long n_elems );
-      public native void copy( @ByVal TypedBuffer src, @Cast("int64_t") long src_offset,
+      public native void copy( @Cast("int64_t") long src_data, @Cast("think::byte_buffer::Datatype::Enum") int src_type, @Cast("int64_t") long src_offset,
       			 @Cast("int64_t*") LongPointer dst, @Cast("int64_t") long dst_offset, @Cast("int64_t") long n_elems );
-      public native void copy( @ByVal TypedBuffer src, @Cast("int64_t") long src_offset,
+      public native void copy( @Cast("int64_t") long src_data, @Cast("think::byte_buffer::Datatype::Enum") int src_type, @Cast("int64_t") long src_offset,
       			 @Cast("int64_t*") LongBuffer dst, @Cast("int64_t") long dst_offset, @Cast("int64_t") long n_elems );
-      public native void copy( @ByVal TypedBuffer src, @Cast("int64_t") long src_offset,
+      public native void copy( @Cast("int64_t") long src_data, @Cast("think::byte_buffer::Datatype::Enum") int src_type, @Cast("int64_t") long src_offset,
       			 @Cast("int64_t*") long[] dst, @Cast("int64_t") long dst_offset, @Cast("int64_t") long n_elems );
-      public native void copy( @ByVal TypedBuffer src, @Cast("int64_t") long src_offset,
+      public native void copy( @Cast("int64_t") long src_data, @Cast("think::byte_buffer::Datatype::Enum") int src_type, @Cast("int64_t") long src_offset,
       			 FloatPointer dst, @Cast("int64_t") long dst_offset, @Cast("int64_t") long n_elems );
-      public native void copy( @ByVal TypedBuffer src, @Cast("int64_t") long src_offset,
+      public native void copy( @Cast("int64_t") long src_data, @Cast("think::byte_buffer::Datatype::Enum") int src_type, @Cast("int64_t") long src_offset,
       			 FloatBuffer dst, @Cast("int64_t") long dst_offset, @Cast("int64_t") long n_elems );
-      public native void copy( @ByVal TypedBuffer src, @Cast("int64_t") long src_offset,
+      public native void copy( @Cast("int64_t") long src_data, @Cast("think::byte_buffer::Datatype::Enum") int src_type, @Cast("int64_t") long src_offset,
       			 float[] dst, @Cast("int64_t") long dst_offset, @Cast("int64_t") long n_elems );
-      public native void copy( @ByVal TypedBuffer src, @Cast("int64_t") long src_offset,
+      public native void copy( @Cast("int64_t") long src_data, @Cast("think::byte_buffer::Datatype::Enum") int src_type, @Cast("int64_t") long src_offset,
       			 DoublePointer dst, @Cast("int64_t") long dst_offset, @Cast("int64_t") long n_elems );
-      public native void copy( @ByVal TypedBuffer src, @Cast("int64_t") long src_offset,
+      public native void copy( @Cast("int64_t") long src_data, @Cast("think::byte_buffer::Datatype::Enum") int src_type, @Cast("int64_t") long src_offset,
       			 DoubleBuffer dst, @Cast("int64_t") long dst_offset, @Cast("int64_t") long n_elems );
-      public native void copy( @ByVal TypedBuffer src, @Cast("int64_t") long src_offset,
+      public native void copy( @Cast("int64_t") long src_data, @Cast("think::byte_buffer::Datatype::Enum") int src_type, @Cast("int64_t") long src_offset,
       			 double[] dst, @Cast("int64_t") long dst_offset, @Cast("int64_t") long n_elems );
 
-      public native void copy( @Cast("const char*") BytePointer src, @Cast("int64_t") long src_offset,
-      			 @ByVal TypedBuffer dst, @Cast("int64_t") long dst_offset, @Cast("int64_t") long n_elems );
-      public native void copy( String src, @Cast("int64_t") long src_offset,
-      			 @ByVal TypedBuffer dst, @Cast("int64_t") long dst_offset, @Cast("int64_t") long n_elems );
+      public native void copy( @Cast("const unsigned char*") BytePointer src, @Cast("int64_t") long src_offset,
+      			 @Cast("int64_t") long dst_data, @Cast("think::byte_buffer::Datatype::Enum") int dst_type, @Cast("int64_t") long dst_offset, @Cast("int64_t") long n_elems );
+      public native void copy( @Cast("const unsigned char*") ByteBuffer src, @Cast("int64_t") long src_offset,
+      			 @Cast("int64_t") long dst_data, @Cast("think::byte_buffer::Datatype::Enum") int dst_type, @Cast("int64_t") long dst_offset, @Cast("int64_t") long n_elems );
+      public native void copy( @Cast("const unsigned char*") byte[] src, @Cast("int64_t") long src_offset,
+      			 @Cast("int64_t") long dst_data, @Cast("think::byte_buffer::Datatype::Enum") int dst_type, @Cast("int64_t") long dst_offset, @Cast("int64_t") long n_elems );
       public native void copy( @Const ShortPointer src, @Cast("int64_t") long src_offset,
-      			 @ByVal TypedBuffer dst, @Cast("int64_t") long dst_offset, @Cast("int64_t") long n_elems );
+      			 @Cast("int64_t") long dst_data, @Cast("think::byte_buffer::Datatype::Enum") int dst_type, @Cast("int64_t") long dst_offset, @Cast("int64_t") long n_elems );
       public native void copy( @Const ShortBuffer src, @Cast("int64_t") long src_offset,
-      			 @ByVal TypedBuffer dst, @Cast("int64_t") long dst_offset, @Cast("int64_t") long n_elems );
+      			 @Cast("int64_t") long dst_data, @Cast("think::byte_buffer::Datatype::Enum") int dst_type, @Cast("int64_t") long dst_offset, @Cast("int64_t") long n_elems );
       public native void copy( @Const short[] src, @Cast("int64_t") long src_offset,
-      			 @ByVal TypedBuffer dst, @Cast("int64_t") long dst_offset, @Cast("int64_t") long n_elems );
+      			 @Cast("int64_t") long dst_data, @Cast("think::byte_buffer::Datatype::Enum") int dst_type, @Cast("int64_t") long dst_offset, @Cast("int64_t") long n_elems );
       public native void copy( @Const IntPointer src, @Cast("int64_t") long src_offset,
-      			 @ByVal TypedBuffer dst, @Cast("int64_t") long dst_offset, @Cast("int64_t") long n_elems );
+      			 @Cast("int64_t") long dst_data, @Cast("think::byte_buffer::Datatype::Enum") int dst_type, @Cast("int64_t") long dst_offset, @Cast("int64_t") long n_elems );
       public native void copy( @Const IntBuffer src, @Cast("int64_t") long src_offset,
-      			 @ByVal TypedBuffer dst, @Cast("int64_t") long dst_offset, @Cast("int64_t") long n_elems );
+      			 @Cast("int64_t") long dst_data, @Cast("think::byte_buffer::Datatype::Enum") int dst_type, @Cast("int64_t") long dst_offset, @Cast("int64_t") long n_elems );
       public native void copy( @Const int[] src, @Cast("int64_t") long src_offset,
-      			 @ByVal TypedBuffer dst, @Cast("int64_t") long dst_offset, @Cast("int64_t") long n_elems );
+      			 @Cast("int64_t") long dst_data, @Cast("think::byte_buffer::Datatype::Enum") int dst_type, @Cast("int64_t") long dst_offset, @Cast("int64_t") long n_elems );
       public native void copy( @Cast("const int64_t*") LongPointer src, @Cast("int64_t") long src_offset,
-      			 @ByVal TypedBuffer dst, @Cast("int64_t") long dst_offset, @Cast("int64_t") long n_elems );
+      			 @Cast("int64_t") long dst_data, @Cast("think::byte_buffer::Datatype::Enum") int dst_type, @Cast("int64_t") long dst_offset, @Cast("int64_t") long n_elems );
       public native void copy( @Cast("const int64_t*") LongBuffer src, @Cast("int64_t") long src_offset,
-      			 @ByVal TypedBuffer dst, @Cast("int64_t") long dst_offset, @Cast("int64_t") long n_elems );
+      			 @Cast("int64_t") long dst_data, @Cast("think::byte_buffer::Datatype::Enum") int dst_type, @Cast("int64_t") long dst_offset, @Cast("int64_t") long n_elems );
       public native void copy( @Cast("const int64_t*") long[] src, @Cast("int64_t") long src_offset,
-      			 @ByVal TypedBuffer dst, @Cast("int64_t") long dst_offset, @Cast("int64_t") long n_elems );
+      			 @Cast("int64_t") long dst_data, @Cast("think::byte_buffer::Datatype::Enum") int dst_type, @Cast("int64_t") long dst_offset, @Cast("int64_t") long n_elems );
       public native void copy( @Const FloatPointer src, @Cast("int64_t") long src_offset,
-      			 @ByVal TypedBuffer dst, @Cast("int64_t") long dst_offset, @Cast("int64_t") long n_elems );
+      			 @Cast("int64_t") long dst_data, @Cast("think::byte_buffer::Datatype::Enum") int dst_type, @Cast("int64_t") long dst_offset, @Cast("int64_t") long n_elems );
       public native void copy( @Const FloatBuffer src, @Cast("int64_t") long src_offset,
-      			 @ByVal TypedBuffer dst, @Cast("int64_t") long dst_offset, @Cast("int64_t") long n_elems );
+      			 @Cast("int64_t") long dst_data, @Cast("think::byte_buffer::Datatype::Enum") int dst_type, @Cast("int64_t") long dst_offset, @Cast("int64_t") long n_elems );
       public native void copy( @Const float[] src, @Cast("int64_t") long src_offset,
-      			 @ByVal TypedBuffer dst, @Cast("int64_t") long dst_offset, @Cast("int64_t") long n_elems );
+      			 @Cast("int64_t") long dst_data, @Cast("think::byte_buffer::Datatype::Enum") int dst_type, @Cast("int64_t") long dst_offset, @Cast("int64_t") long n_elems );
       public native void copy( @Const DoublePointer src, @Cast("int64_t") long src_offset,
-      			 @ByVal TypedBuffer dst, @Cast("int64_t") long dst_offset, @Cast("int64_t") long n_elems );
+      			 @Cast("int64_t") long dst_data, @Cast("think::byte_buffer::Datatype::Enum") int dst_type, @Cast("int64_t") long dst_offset, @Cast("int64_t") long n_elems );
       public native void copy( @Const DoubleBuffer src, @Cast("int64_t") long src_offset,
-      			 @ByVal TypedBuffer dst, @Cast("int64_t") long dst_offset, @Cast("int64_t") long n_elems );
+      			 @Cast("int64_t") long dst_data, @Cast("think::byte_buffer::Datatype::Enum") int dst_type, @Cast("int64_t") long dst_offset, @Cast("int64_t") long n_elems );
       public native void copy( @Const double[] src, @Cast("int64_t") long src_offset,
-      			 @ByVal TypedBuffer dst, @Cast("int64_t") long dst_offset, @Cast("int64_t") long n_elems );
+      			 @Cast("int64_t") long dst_data, @Cast("think::byte_buffer::Datatype::Enum") int dst_type, @Cast("int64_t") long dst_offset, @Cast("int64_t") long n_elems );
 
 
-      public native void copy( @ByVal TypedBuffer src, @Cast("int64_t") long src_offset,
-      			 @ByVal TypedBuffer dst, @Cast("int64_t") long dst_offset, @Cast("int64_t") long n_elems );
+      public native void copy( @Cast("int64_t") long src_data, @Cast("think::byte_buffer::Datatype::Enum") int src_type, @Cast("int64_t") long src_offset,
+      			 @Cast("int64_t") long dst_data, @Cast("think::byte_buffer::Datatype::Enum") int dst_type, @Cast("int64_t") long dst_offset, @Cast("int64_t") long n_elems );
 
 
-      public native void set_value( @ByVal TypedBuffer dst, @Cast("int64_t") long offset, @Cast("char") byte value, @Cast("int64_t") long n_elems );
-      public native void set_value( @ByVal TypedBuffer dst, @Cast("int64_t") long offset, short value, @Cast("int64_t") long n_elems );
-      public native void set_value( @ByVal TypedBuffer dst, @Cast("int64_t") long offset, int value, @Cast("int64_t") long n_elems );
-      public native void set_value( @ByVal TypedBuffer dst, @Cast("int64_t") long offset, @Cast("int64_t") long value, @Cast("int64_t") long n_elems );
-      public native void set_value( @ByVal TypedBuffer dst, @Cast("int64_t") long offset, float value, @Cast("int64_t") long n_elems );
-      public native void set_value( @ByVal TypedBuffer dst, @Cast("int64_t") long offset, double value, @Cast("int64_t") long n_elems );
+      public native void set_value( @Cast("int64_t") long dst_data, @Cast("think::byte_buffer::Datatype::Enum") int dst_type,
+      			      @Cast("int64_t") long offset, @Cast("unsigned char") byte value, @Cast("int64_t") long n_elems );
+      public native void set_value( @Cast("int64_t") long dst_data, @Cast("think::byte_buffer::Datatype::Enum") int dst_type,
+      			      @Cast("int64_t") long offset, short value, @Cast("int64_t") long n_elems );
+      public native void set_value( @Cast("int64_t") long dst_data, @Cast("think::byte_buffer::Datatype::Enum") int dst_type,
+      			      @Cast("int64_t") long offset, int value, @Cast("int64_t") long n_elems );
+      public native void set_value( @Cast("int64_t") long dst_data, @Cast("think::byte_buffer::Datatype::Enum") int dst_type,
+      			      @Cast("int64_t") long offset, @Cast("int64_t") long value, @Cast("int64_t") long n_elems );
+      public native void set_value( @Cast("int64_t") long dst_data, @Cast("think::byte_buffer::Datatype::Enum") int dst_type,
+      			      @Cast("int64_t") long offset, float value, @Cast("int64_t") long n_elems );
+      public native void set_value( @Cast("int64_t") long dst_data, @Cast("think::byte_buffer::Datatype::Enum") int dst_type,
+      			      @Cast("int64_t") long offset, double value, @Cast("int64_t") long n_elems );
 
-      public native @Cast("char") byte get_value_char( @ByVal TypedBuffer src, @Cast("int64_t") long offset );
-      public native short get_value_short( @ByVal TypedBuffer src, @Cast("int64_t") long offset );
-      public native int get_value_int32_t( @ByVal TypedBuffer src, @Cast("int64_t") long offset );
-      public native @Cast("int64_t") long get_value_int64( @ByVal TypedBuffer src, @Cast("int64_t") long offset );
-      public native float get_value_float( @ByVal TypedBuffer src, @Cast("int64_t") long offset );
-      public native double get_value_double( @ByVal TypedBuffer src, @Cast("int64_t") long offset );
+      public native @Cast("unsigned char") byte get_value_int8( @Cast("int64_t") long src_data, @Cast("think::byte_buffer::Datatype::Enum") int src_type, @Cast("int64_t") long offset );
+      public native short get_value_int16( @Cast("int64_t") long src_data, @Cast("think::byte_buffer::Datatype::Enum") int src_type, @Cast("int64_t") long offset );
+      public native int get_value_int32( @Cast("int64_t") long src_data, @Cast("think::byte_buffer::Datatype::Enum") int src_type, @Cast("int64_t") long offset );
+      public native @Cast("int64_t") long get_value_int64( @Cast("int64_t") long src_data, @Cast("think::byte_buffer::Datatype::Enum") int src_type, @Cast("int64_t") long offset );
+      public native float get_value_float( @Cast("int64_t") long src_data, @Cast("think::byte_buffer::Datatype::Enum") int src_type, @Cast("int64_t") long offset );
+      public native double get_value_double( @Cast("int64_t") long src_data, @Cast("think::byte_buffer::Datatype::Enum") int src_type, @Cast("int64_t") long offset );
 
 
       public static native BufferManager create_buffer_manager();

@@ -5,7 +5,8 @@
             :url "http://www.eclipse.org/legal/epl-v10.html"}
   :dependencies [[org.clojure/clojure "1.8.0"]
                  [org.bytedeco/javacpp "1.2.4"]
-                 [thinktopic/resource "1.1.0"]]
+                 [thinktopic/resource "1.1.0"]
+                 [thinktopic/think.datatype "0.2.0-SNAPSHOT"]]
   :java-source-paths ["java"]
   :native-path "java/native/"
   :aot [think.byte-buffer.compile]
