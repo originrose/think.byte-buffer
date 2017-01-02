@@ -11,7 +11,8 @@
            [think.datatype DoubleArrayView FloatArrayView
             LongArrayView IntArrayView ShortArrayView ByteArrayView]
            [java.nio ShortBuffer IntBuffer LongBuffer
-            FloatBuffer DoubleBuffer Buffer]))
+            FloatBuffer DoubleBuffer Buffer]
+           [org.bytedeco.javacpp DoublePointer FloatPointer]))
 
 
 (set! *warn-on-reflection* true)
@@ -303,14 +304,21 @@ onto other datatypes."
     (resource/track retval)))
 
 
+(defn time-op
+  [op]
+  (dotimes [iter 5]
+    (op))
+  (time
+   (dotimes [iter 100]
+     (op))))
+
+
 (defn typed-buffer-time-test
   [n-elems]
   (resource/with-resource-context
    (let [double-ary (double-array (range n-elems))
          buf (make-typed-buffer :float n-elems)]
-     (time
-      (dotimes [iter 100]
-        (dtype/copy! double-ary 0 buf 0 n-elems))))))
+     (time-op #(dtype/copy! double-ary 0 buf 0 n-elems)))))
 
 
 (defn nio-buffer-time-test
@@ -319,12 +327,19 @@ onto other datatypes."
     (let [double-ary (double-array (range n-elems))
           ^FloatBuffer buf (dtype/make-buffer :float n-elems)
           n-elems (long n-elems)]
-      ;;I am hugely cheating here because I know the types.  It would take a lot of effort
-      ;;to generically make this work across the different combinations of buffers and arrays.
-      (time
-       (dotimes [iter 100]
-         (c-for [idx 0 (< idx n-elems) (inc idx)]
-                (.put buf idx (float (aget double-ary idx)))))))))
+      (time-op #(c-for [idx 0 (< idx n-elems) (inc idx)]
+                       (.put buf idx (float (aget double-ary idx))))))))
+
+
+(defn javacpp-pointer-time-test
+  [n-elems]
+  (resource/with-resource-context
+    (let [double-ary (double-array (range n-elems))
+          ^FloatPointer ptr (FloatPointer. (long n-elems))
+          buf (.asBuffer ptr)
+          n-elems (long n-elems)]
+      (time-op #(c-for [idx 0 (< idx n-elems) (inc idx)]
+                       (.put buf idx (float (aget double-ary idx))))))))
 
 
 (defn typed-buffer-same-type-time-test
@@ -342,9 +357,7 @@ onto other datatypes."
   (resource/with-resource-context
     (let [double-ary (double-array (range n-elems))
           buf (dtype/make-buffer :double n-elems)]
-      (time
-       (dotimes [iter 100]
-         (dtype/copy! double-ary 0 buf 0 n-elems))))))
+      (time-op #(dtype/copy! double-ary 0 buf 0 n-elems)))))
 
 
 (defn run-time-tests
@@ -354,6 +367,8 @@ onto other datatypes."
     (typed-buffer-time-test n-elems)
     (println "nio-buffer-marshal-test")
     (nio-buffer-time-test n-elems)
+    (println "javacpp marshal test")
+    (javacpp-pointer-time-test n-elems)
     (println "typed-buffer-same-type-time-test")
     (typed-buffer-same-type-time-test n-elems)
     (println "new-buffer-same-type-time-test")
