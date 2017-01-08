@@ -1,5 +1,4 @@
 (ns think.byte-buffer.compile
-  (:gen-class)
   (:import [org.bytedeco.javacpp.tools Builder]))
 
 
@@ -20,15 +19,3 @@
                                     "-Xcompiler"
                                     "-std=c++14"
                                     ])))
-
-(defn -main
-  [& args]
-  (let [arg-val (first args)
-        command (if arg-val
-                  (keyword arg-val)
-                  :build-jni-java)]
-    (condp = command
-      :build-jni-java ;;step 1
-      (build-java-stub)
-      :build-jni
-      (build-jni-lib))))

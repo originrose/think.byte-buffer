@@ -41,6 +41,12 @@ onto other datatypes."
   (copy-to-typed-buffer! [src src-offset typed-buffer dest-offset elem-count]))
 
 
+(defprotocol IndexedCopyToTypedBuffer
+  "Internal protocol to this library; maps the typed buffer operations
+onto other datatypes."
+  (indexed-copy-to-typed-buffer! [src src-offset src-indexes typed-buffer dest-offset dest-indexes]))
+
+
 (defprotocol BufferAccess
   "Internal protocol, maps the set call into the appropriate set_value overload."
   (set-typed-buffer-value! [value typed-buffer offset n-elems]))
@@ -55,6 +61,14 @@ onto other datatypes."
                      :elem-count elem-count}))))
 
 
+(defn get-min-index
+  ^long [item offset]
+  (long (- offset)))
+
+
+(defn get-max-index
+  ^long [item offset]
+  (- (dtype/ecount item) (long offset) 1))
 
 
 (defrecord TypedBuffer [^long data ^long size datatype
@@ -97,6 +111,9 @@ onto other datatypes."
   (copy-to-array-direct! [item item-offset dest dest-offset elem-count]
     (check-buffer-access size item-offset elem-count)
     ((dtype/get-indirect-copy-fn dest dest-offset) item item-offset elem-count))
+  marshal/PIndexedTypeToCopyToFn
+  (get-indexed-copy-to-fn [dest dest-offset]
+    #(indexed-copy-to-typed-buffer! %1 %2 %3 dest dest-offset %4))
   dtype/PView
   (->view-impl [this offset elem-count]
     (check-buffer-access size offset elem-count)
@@ -109,28 +126,80 @@ onto other datatypes."
             data (->cpp-datatype datatype) (long src-offset)
             (.data dest) (->cpp-datatype (.datatype dest)) (long dest-offset)
             (long elem-count))))
+  IndexedCopyToTypedBuffer
+  (indexed-copy-to-typed-buffer! [src src-offset src-indexes dest dest-offset dest-indexes]
+    (let [^TypedBuffer dest dest]
+      (.indexed_copy ^ByteBuffer$BufferManager manager
+                     data (->cpp-datatype datatype)
+                     (long src-offset) ^ints src-indexes
+                     (int (get-min-index src src-offset)) (int (get-max-index src src-offset))
+                     (.data dest) (->cpp-datatype (.datatype dest))
+                     (long dest-offset) ^ints dest-indexes
+                     (int (get-min-index dest dest-offset)) (int (get-max-index dest dest-offset))
+                     (alength ^ints src-indexes))))
   resource/PResource
   (release-resource [this]
     (.release-buffer manager data)))
 
 
-(defn to-typed-buffer
+(defn as-typed-buffer
   ^TypedBuffer [obj] obj)
+
+
+
+(defmacro indexed-array-copy-to-impl
+  [src src-offset src-indexes dest dest-offset dest-indexes]
+  `(let [elem-count# (alength ~src-indexes)]
+     (check-buffer-access (alength ~src) ~src-offset elem-count#)
+     (.indexed_copy ^ByteBuffer$BufferManager (.manager ~dest)
+                    ~src (long ~src-offset) ~src-indexes
+                    (int (get-min-index ~src ~src-offset)) (int (get-max-index ~src ~src-offset))
+                    (.data ~dest) (->cpp-datatype (.datatype ~dest))
+                    (long ~dest-offset) ~dest-indexes
+                    (int (get-min-index ~dest ~dest-offset)) (int (get-max-index ~dest ~dest-offset))
+                    elem-count#)))
+
+
+(defmacro indexed-array-copy-from-impl
+  [src src-offset src-indexes dest dest-offset dest-indexes]
+  `(let [elem-count# (alength ~src-indexes)]
+     (check-buffer-access (alength ~dest) ~dest-offset elem-count#)
+     (.indexed_copy ^ByteBuffer$BufferManager (.manager ~src)
+                    (.data ~src) (int (->cpp-datatype (.datatype ~src)))
+                    (long ~src-offset) ^ints ~src-indexes
+                    (int (get-min-index ~src ~src-offset)) (int (get-max-index ~src ~src-offset))
+                    ~dest (long ~dest-offset) ~dest-indexes
+                    (int (get-min-index ~dest ~dest-offset)) (int (get-max-index ~dest ~dest-offset))
+                    elem-count#)))
 
 
 (defmacro typed-buffer->array-impl
   [ary-type ary-type-fn copy-to-fn cast-fn]
   `[(keyword (name ~copy-to-fn))
     (fn [src# src-offset# dest# dest-offset# elem-count#]
-      (let [src# (to-typed-buffer src#)]
+      (let [src# (as-typed-buffer src#)]
         (.copy ^ByteBuffer$BufferManager (.manager src#)
                (.data src#) (int (->cpp-datatype (.datatype src#))) (long src-offset#)
                (~ary-type-fn dest#) (long dest-offset#) (long elem-count#))))])
 
 
+
+(defmacro indexed-type-buffer->array-impl
+  [ary-type ary-type-fn copy-to-fn cast-fn]
+  `[(keyword (name ~copy-to-fn))
+    (fn [src# src-offset# src-indexes# dest# dest-offset# dest-indexes#]
+      (indexed-array-copy-from-impl (as-typed-buffer src#) src-offset#
+                                    (marshal/as-int-array src-indexes#)
+                                    (~ary-type-fn dest#) dest-offset#
+                                    (marshal/as-int-array dest-indexes#)))])
+
+
 (extend TypedBuffer
   marshal/PCopyToArray
   (->> (marshal/array-type-iterator typed-buffer->array-impl)
+       (into {}))
+  marshal/PIndexedCopyToArray
+  (->> (marshal/indexed-array-type-iterator indexed-type-buffer->array-impl)
        (into {})))
 
 
@@ -139,11 +208,19 @@ onto other datatypes."
   `(extend ~ary-type
      CopyToTypedBuffer
      {:copy-to-typed-buffer! (fn [src# src-offset# dest# dest-offset# elem-count#]
-                               (let [dest# (to-typed-buffer dest#)]
+                               (let [dest# (as-typed-buffer dest#)]
                                  (.copy ^ByteBuffer$BufferManager (.manager dest#)
                                         (~ary-type-fn src#) (long src-offset#)
-                                        (.data dest#) (int (->cpp-datatype (.datatype dest#))) (long dest-offset#)
-                                        (long elem-count#))))}))
+                                        (.data dest#) (int (->cpp-datatype (.datatype dest#)))
+                                        (long dest-offset#)
+                                        (long elem-count#))))}
+     IndexedCopyToTypedBuffer
+     {:indexed-copy-to-typed-buffer
+      (fn [src# src-offset# src-indexes# typed-buffer# dest-offset# dest-indexes#]
+        (indexed-array-copy-to-impl (~ary-type-fn src#)
+                                    src-offset# (marshal/as-int-array src-indexes#)
+                                    (as-typed-buffer typed-buffer#)
+                                    dest-offset# (marshal/as-int-array dest-indexes#)))}))
 
 
 (def typed-buffer-array-bindings (marshal/array-type-iterator typed-buffer-array-binding))
@@ -156,11 +233,21 @@ onto other datatypes."
                          dest dest-offset elem-count))
 
 
+(defn- array-view-indexed-copy-to-typed-buffer
+  [src src-offset src-indexes dest dest-offset dest-indexes]
+  (indexed-copy-to-typed-buffer! (marshal/view->array src)
+                                 (marshal/view->array-offset src src-offset)
+                                 src-indexes
+                                 dest dest-offset dest-indexes))
+
+
 (defmacro typed-buffer-array-view-binding
   [view-type view-type-fn copy-to-fn cast-fn]
   `(extend ~view-type
      CopyToTypedBuffer
-     {:copy-to-typed-buffer! array-view-copy-to-typed-buffer}))
+     {:copy-to-typed-buffer! array-view-copy-to-typed-buffer}
+     IndexedCopyToTypedBuffer
+     {:indexed-copy-to-typed-buffer! array-view-indexed-copy-to-typed-buffer}))
 
 
 (def typed-buffer-array-view-bindings (marshal/array-view-iterator typed-buffer-array-view-binding))
@@ -232,3 +319,11 @@ onto other datatypes."
             (dtype/copy! src-data 0 retval 0 data-len)
             retval))]
     (resource/track retval)))
+
+(extend-type Object
+  CopyToTypedBuffer
+  (copy-to-typed-buffer! [src src-offset typed-buffer dest-offset elem-count]
+    (dtype/generic-copy! src src-offset typed-buffer dest-offset elem-count))
+  IndexedCopyToTypedBuffer
+  (indexed-copy-to-typed-buffer! [src src-offset src-indexes typed-buffer dest-offset dest-indexes]
+    (dtype/generic-indexed-copy! src src-offset src-indexes typed-buffer dest-offset dest-indexes)))

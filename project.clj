@@ -9,5 +9,5 @@
                  [thinktopic/think.datatype "0.3.3-SNAPSHOT"]]
   :java-source-paths ["java"]
   :native-path "java/native/"
-  :aot [think.byte-buffer.compile]
-  :main think.byte-buffer.compile)
+  :aot [think.byte-buffer.main]
+  :main think.byte-buffer.main)
