@@ -23,7 +23,7 @@ namespace think { namespace byte_buffer {
     template<> struct datatype_to_type<Datatype::dtype> { typedef type TType; }; \
     template<> struct type_to_datatype<type> { static Datatype::Enum datatype() { return Datatype::dtype; } };
 
-    DEFINE_DATATYPE(Byte,uint8_t);
+    DEFINE_DATATYPE(Byte,int8_t);
     DEFINE_DATATYPE(Short,int16_t);
     DEFINE_DATATYPE(Int,int32_t);
     DEFINE_DATATYPE(Long,int64_t);
@@ -67,7 +67,7 @@ namespace think { namespace byte_buffer {
 	single_copy_op<dtype>::copy( src, src_offset, dst, dst_offset, n_elems);}};
 
 
-    DEFINE_SINGLE_TYPE_COPY(uint8_t);
+    DEFINE_SINGLE_TYPE_COPY(int8_t);
     DEFINE_SINGLE_TYPE_COPY(int16_t);
     DEFINE_SINGLE_TYPE_COPY(int32_t);
     DEFINE_SINGLE_TYPE_COPY(int64_t);
@@ -134,6 +134,48 @@ namespace think { namespace byte_buffer {
       buf_set<dst_type,val_type>::set(dst, dst_offset, value, n_elems);
     }
 
+    inline int access_index(const int32_t* indexes, int64_t idx, int32_t min_idx, int32_t max_idx)
+    {
+      int retval = indexes[idx];
+      if (retval < min_idx ||
+	  retval > max_idx) {
+	throw runtime_error("index out of range");
+      }
+      return retval;
+    }
+
+    template<typename src_type, typename dst_type>
+    struct indexed_copy_impl
+    {
+      static inline void indexed_copy(const src_type* src, int64_t src_offset, const int32_t* src_indexes,
+				      int32_t src_min_index, int32_t src_max_index,
+				      dst_type* dst, int64_t dst_offset, const int32_t* dst_indexes,
+				      int32_t dst_min_index, int32_t dst_max_index,
+				      int64_t n_elems)
+      {
+	src += src_offset;
+	dst += dst_offset;
+	for(int64_t idx = 0; idx < n_elems; ++idx) {
+	  dst[access_index( dst_indexes, idx, dst_min_index, dst_max_index) ] =
+	    (dst_type) src[access_index( src_indexes, idx, src_min_index, src_max_index)];
+	}
+      }
+    };
+
+    template<typename src_type, typename dst_type>
+    inline void do_indexed_copy(const src_type* src, int64_t src_offset, const int32_t* src_indexes,
+				int32_t src_min_index, int32_t src_max_index,
+				dst_type* dst, int64_t dst_offset, const int32_t* dst_indexes,
+				int32_t dst_min_index, int32_t dst_max_index,
+				int64_t n_elems) {
+      indexed_copy_impl<src_type,dst_type>::indexed_copy(src, src_offset, src_indexes,
+							 src_min_index, src_max_index,
+							 dst, dst_offset, dst_indexes,
+							 dst_min_index, dst_max_index,
+							 n_elems);
+    }
+
+
     template<typename TRetType, typename TOpType>
     inline TRetType typed_buffer_op(int64_t data, Datatype::Enum type, TOpType op)
     {
@@ -174,7 +216,7 @@ namespace think { namespace byte_buffer {
 
 
       virtual void copy( int64_t src_data, Datatype::Enum src_type, int64_t src_offset,
-			 uint8_t* dst, int64_t dst_offset, int64_t n_elems ) {
+			 int8_t* dst, int64_t dst_offset, int64_t n_elems ) {
 	buffer_to_data( src_data, src_type, src_offset, dst, dst_offset, n_elems );
       }
       virtual void copy( int64_t src_data, Datatype::Enum src_type, int64_t src_offset,
@@ -210,7 +252,7 @@ namespace think { namespace byte_buffer {
 			      });
       }
 
-      virtual void copy( const uint8_t* src, int64_t src_offset,
+      virtual void copy( const int8_t* src, int64_t src_offset,
 			 int64_t dst_data, Datatype::Enum dst_type, int64_t dst_offset, int64_t n_elems ) {
 	data_to_buffer(src, src_offset, dst_data, dst_type, dst_offset, n_elems );
       }
@@ -246,31 +288,245 @@ namespace think { namespace byte_buffer {
 	  } );
       }
 
+      template<typename dst_type>
+      inline void indexed_copy_from_buffer( int64_t src_data, Datatype::Enum src_type,
+					    int64_t src_offset, const int32_t* src_indexes,
+					    int32_t src_min_index, int32_t src_max_index,
+					    dst_type* dst_ptr,
+					    int64_t dst_offset, const int32_t* dst_indexes,
+					    int32_t dst_min_index, int32_t dst_max_index, int64_t n_elems) {
+	typed_buffer_op<void>(src_data, src_type, [=](auto src_ptr) {
+	    do_indexed_copy(src_ptr, src_offset, src_indexes,
+			    src_min_index, src_max_index,
+			    dst_ptr, dst_offset, dst_indexes,
+			    dst_min_index, dst_max_index,
+			    n_elems);
+	  });
+      }
 
       template<typename src_type>
-      void set_buffer_value( int64_t dst_data, Datatype::Enum dst_type, int64_t offset, src_type value, int64_t n_elems ) {
+      inline void indexed_copy_to_buffer( const src_type* src_ptr,
+					  int64_t src_offset, const int32_t* src_indexes,
+					  int32_t src_min_index, int32_t src_max_index,
+					  int64_t dst_data, Datatype::Enum dst_type,
+					  int64_t dst_offset, const int32_t* dst_indexes,
+					  int32_t dst_min_index, int32_t dst_max_index, int64_t n_elems) {
+	typed_buffer_op<void>(dst_data, dst_type, [=](auto dst_ptr) {
+	    do_indexed_copy(src_ptr, src_offset, src_indexes,
+			    src_min_index, src_max_index,
+			    dst_ptr, dst_offset, dst_indexes,
+			    dst_min_index, dst_max_index,
+			    n_elems);
+	  });
+      }
+
+
+
+      virtual void indexed_copy( int64_t src_data, Datatype::Enum src_type,
+				 int64_t src_offset, const int32_t* src_indexes,
+				 int32_t src_min_index, int32_t src_max_index,
+				 byte_t* dst_ptr,
+				 int64_t dst_offset, const int32_t* dst_indexes,
+				 int32_t dst_min_index, int32_t dst_max_index, int64_t n_elems ) {
+	indexed_copy_from_buffer( src_data, src_type,
+				  src_offset, src_indexes,
+				  src_min_index, src_max_index,
+				  dst_ptr,
+				  dst_offset, dst_indexes,
+				  dst_min_index, dst_max_index, n_elems);
+      }
+      virtual void indexed_copy( int64_t src_data, Datatype::Enum src_type,
+				 int64_t src_offset, const int32_t* src_indexes,
+				 int32_t src_min_index, int32_t src_max_index,
+				 int16_t* dst_ptr,
+				 int64_t dst_offset, const int32_t* dst_indexes,
+				 int32_t dst_min_index, int32_t dst_max_index, int64_t n_elems ) {
+	indexed_copy_from_buffer( src_data, src_type,
+				  src_offset, src_indexes,
+				  src_min_index, src_max_index,
+				  dst_ptr,
+				  dst_offset, dst_indexes,
+				  dst_min_index, dst_max_index, n_elems);
+      }
+      virtual void indexed_copy( int64_t src_data, Datatype::Enum src_type,
+				 int64_t src_offset, const int32_t* src_indexes,
+				 int32_t src_min_index, int32_t src_max_index,
+				 int32_t* dst_ptr,
+				 int64_t dst_offset, const int32_t* dst_indexes,
+				 int32_t dst_min_index, int32_t dst_max_index, int64_t n_elems ) {
+	indexed_copy_from_buffer( src_data, src_type,
+				  src_offset, src_indexes,
+				  src_min_index, src_max_index,
+				  dst_ptr,
+				  dst_offset, dst_indexes,
+				  dst_min_index, dst_max_index, n_elems);
+      }
+      virtual void indexed_copy( int64_t src_data, Datatype::Enum src_type,
+				 int64_t src_offset, const int32_t* src_indexes,
+				 int32_t src_min_index, int32_t src_max_index,
+				 int64_t* dst_ptr,
+				 int64_t dst_offset, const int32_t* dst_indexes,
+				 int32_t dst_min_index, int32_t dst_max_index, int64_t n_elems ) {
+	indexed_copy_from_buffer( src_data, src_type,
+				  src_offset, src_indexes,
+				  src_min_index, src_max_index,
+				  dst_ptr,
+				  dst_offset, dst_indexes,
+				  dst_min_index, dst_max_index, n_elems);
+      }
+      virtual void indexed_copy( int64_t src_data, Datatype::Enum src_type,
+				 int64_t src_offset, const int32_t* src_indexes,
+				 int32_t src_min_index, int32_t src_max_index,
+				 float* dst_ptr,
+				 int64_t dst_offset, const int32_t* dst_indexes,
+				 int32_t dst_min_index, int32_t dst_max_index, int64_t n_elems ) {
+	indexed_copy_from_buffer( src_data, src_type,
+				  src_offset, src_indexes,
+				  src_min_index, src_max_index,
+				  dst_ptr,
+				  dst_offset, dst_indexes,
+				  dst_min_index, dst_max_index, n_elems);
+      }
+      virtual void indexed_copy( int64_t src_data, Datatype::Enum src_type,
+				 int64_t src_offset, const int32_t* src_indexes,
+				 int32_t src_min_index, int32_t src_max_index,
+				 double* dst_ptr, int64_t dst_offset, const int32_t* dst_indexes,
+				 int32_t dst_min_index, int32_t dst_max_index, int64_t n_elems ) {
+	indexed_copy_from_buffer( src_data, src_type,
+				  src_offset, src_indexes,
+				  src_min_index, src_max_index,
+				  dst_ptr,
+				  dst_offset, dst_indexes,
+				  dst_min_index, dst_max_index, n_elems);
+      }
+
+      virtual void indexed_copy( const byte_t* src,
+				 int64_t src_offset, const int32_t* src_indexes,
+				 int32_t src_min_index, int32_t src_max_index,
+				 int64_t dst_data, Datatype::Enum dst_type,
+				 int64_t dst_offset, const int32_t* dst_indexes,
+				 int32_t dst_min_index, int32_t dst_max_index, int64_t n_elems ) {
+	indexed_copy_to_buffer( src,
+				src_offset, src_indexes,
+				src_min_index, src_max_index,
+				dst_data, dst_type,
+				dst_offset, dst_indexes,
+				dst_min_index, dst_max_index, n_elems);
+      }
+      virtual void indexed_copy( const int16_t* src,
+				 int64_t src_offset, const int32_t* src_indexes,
+				 int32_t src_min_index, int32_t src_max_index,
+				 int64_t dst_data, Datatype::Enum dst_type,
+				 int64_t dst_offset, const int32_t* dst_indexes,
+				 int32_t dst_min_index, int32_t dst_max_index, int64_t n_elems ) {
+	indexed_copy_to_buffer( src,
+				src_offset, src_indexes,
+				src_min_index, src_max_index,
+				dst_data, dst_type,
+				dst_offset, dst_indexes,
+				dst_min_index, dst_max_index, n_elems);
+      }
+      virtual void indexed_copy( const int32_t* src, int64_t src_offset, const int32_t* src_indexes,
+				 int32_t src_min_index, int32_t src_max_index,
+				 int64_t dst_data, Datatype::Enum dst_type,
+				 int64_t dst_offset, const int32_t* dst_indexes,
+				 int32_t dst_min_index, int32_t dst_max_index, int64_t n_elems ) {
+	indexed_copy_to_buffer( src,
+				src_offset, src_indexes,
+				src_min_index, src_max_index,
+				dst_data, dst_type,
+				dst_offset, dst_indexes,
+				dst_min_index, dst_max_index, n_elems);
+      }
+      virtual void indexed_copy( const int64_t* src,
+				 int64_t src_offset, const int32_t* src_indexes,
+				 int32_t src_min_index, int32_t src_max_index,
+				 int64_t dst_data, Datatype::Enum dst_type,
+				 int64_t dst_offset, const int32_t* dst_indexes,
+				 int32_t dst_min_index, int32_t dst_max_index, int64_t n_elems ) {
+	indexed_copy_to_buffer( src,
+				src_offset, src_indexes,
+				src_min_index, src_max_index,
+				dst_data, dst_type,
+				dst_offset, dst_indexes,
+				dst_min_index, dst_max_index, n_elems);
+      }
+      virtual void indexed_copy( const float* src,
+				 int64_t src_offset, const int32_t* src_indexes,
+				 int32_t src_min_index, int32_t src_max_index,
+				 int64_t dst_data, Datatype::Enum dst_type,
+				 int64_t dst_offset, const int32_t* dst_indexes,
+				 int32_t dst_min_index, int32_t dst_max_index, int64_t n_elems ) {
+	indexed_copy_to_buffer( src,
+				src_offset, src_indexes,
+				src_min_index, src_max_index,
+				dst_data, dst_type,
+				dst_offset, dst_indexes,
+				dst_min_index, dst_max_index, n_elems);
+      }
+      virtual void indexed_copy( const double* src,
+				 int64_t src_offset, const int32_t* src_indexes,
+				 int32_t src_min_index, int32_t src_max_index,
+				 int64_t dst_data, Datatype::Enum dst_type,
+				 int64_t dst_offset, const int32_t* dst_indexes,
+				 int32_t dst_min_index, int32_t dst_max_index, int64_t n_elems ) {
+	indexed_copy_to_buffer( src,
+				src_offset, src_indexes,
+				src_min_index, src_max_index,
+				dst_data, dst_type,
+				dst_offset, dst_indexes,
+				dst_min_index, dst_max_index, n_elems);
+      }
+
+      virtual void indexed_copy( int64_t src_data, Datatype::Enum src_type,
+				 int64_t src_offset, const int32_t* src_indexes,
+				 int32_t src_min_index, int32_t src_max_index,
+				 int64_t dst_data, Datatype::Enum dst_type,
+				 int64_t dst_offset, const int32_t* dst_indexes,
+				 int32_t dst_min_index, int32_t dst_max_index, int64_t n_elems ) {
+	typed_buffer_op<void>(src_data, src_type, [=](auto src_ptr) {
+	    typed_buffer_op<void>(dst_data, dst_type, [=](auto dst_ptr) {
+		do_indexed_copy(src_ptr, src_offset, src_indexes,
+				src_min_index, src_max_index,
+				dst_ptr, dst_offset, dst_indexes,
+				dst_min_index, dst_max_index, n_elems);
+	      });
+	  });
+      }
+
+
+
+      template<typename src_type>
+      void set_buffer_value( int64_t dst_data, Datatype::Enum dst_type, int64_t offset,
+			     src_type value, int64_t n_elems ) {
 	typed_buffer_op<void>(dst_data, dst_type,
 			      [=](auto dst_ptr) {
 				do_set(dst_ptr, offset, value, n_elems);
 			      });
       }
 
-      virtual void set_value( int64_t dst_data, Datatype::Enum dst_type, int64_t offset, uint8_t value, int64_t n_elems ) {
+      virtual void set_value( int64_t dst_data, Datatype::Enum dst_type,
+			      int64_t offset, int8_t value, int64_t n_elems ) {
 	set_buffer_value(dst_data, dst_type, offset, value, n_elems);
       }
-      virtual void set_value( int64_t dst_data, Datatype::Enum dst_type, int64_t offset, int16_t value, int64_t n_elems ) {
+      virtual void set_value( int64_t dst_data, Datatype::Enum dst_type,
+			      int64_t offset, int16_t value, int64_t n_elems ) {
 	set_buffer_value(dst_data, dst_type, offset, value, n_elems);
       }
-      virtual void set_value( int64_t dst_data, Datatype::Enum dst_type, int64_t offset, int32_t value, int64_t n_elems ) {
+      virtual void set_value( int64_t dst_data, Datatype::Enum dst_type,
+			      int64_t offset, int32_t value, int64_t n_elems ) {
 	set_buffer_value(dst_data, dst_type, offset, value, n_elems);
       }
-      virtual void set_value( int64_t dst_data, Datatype::Enum dst_type, int64_t offset, int64_t value, int64_t n_elems ) {
+      virtual void set_value( int64_t dst_data, Datatype::Enum dst_type,
+			      int64_t offset, int64_t value, int64_t n_elems ) {
 	set_buffer_value(dst_data, dst_type, offset, value, n_elems);
       }
-      virtual void set_value( int64_t dst_data, Datatype::Enum dst_type, int64_t offset, float value, int64_t n_elems ) {
+      virtual void set_value( int64_t dst_data, Datatype::Enum dst_type,
+			      int64_t offset, float value, int64_t n_elems ) {
 	set_buffer_value(dst_data, dst_type, offset, value, n_elems);
       }
-      virtual void set_value( int64_t dst_data, Datatype::Enum dst_type, int64_t offset, double value, int64_t n_elems ) {
+      virtual void set_value( int64_t dst_data, Datatype::Enum dst_type,
+			      int64_t offset, double value, int64_t n_elems ) {
 	set_buffer_value(dst_data, dst_type, offset, value, n_elems);
       }
 
@@ -284,8 +540,8 @@ namespace think { namespace byte_buffer {
 					 });
       }
 
-      virtual uint8_t get_value_int8( int64_t src_data, Datatype::Enum src_type, int64_t offset ) {
-	return get_buffer_value<uint8_t>( src_data, src_type, offset );
+      virtual byte_t get_value_int8( int64_t src_data, Datatype::Enum src_type, int64_t offset ) {
+	return get_buffer_value<int8_t>( src_data, src_type, offset );
       }
       virtual int16_t get_value_int16( int64_t src_data, Datatype::Enum src_type, int64_t offset ) {
 	return get_buffer_value<int16_t>( src_data, src_type, offset );

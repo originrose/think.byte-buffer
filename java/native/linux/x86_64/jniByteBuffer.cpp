@@ -1476,7 +1476,7 @@ JNIEXPORT jobject JNICALL Java_org_bytedeco_javacpp_SizeTPointer_put(JNIEnv* env
 }
 
 
-JNIEXPORT void JNICALL Java_think_byte_1buffer_ByteBuffer_00024BufferManager_release_1buffer(JNIEnv* env, jobject obj, jlong arg0) {
+JNIEXPORT void JNICALL Java_think_byte_1buffer_ByteBuffer_00024BufferManager_indexed_1copy__Lorg_bytedeco_javacpp_BytePointer_2JLorg_bytedeco_javacpp_IntPointer_2IIJIJLorg_bytedeco_javacpp_IntPointer_2IIJ(JNIEnv* env, jobject obj, jobject arg0, jlong arg1, jobject arg2, jint arg3, jint arg4, jlong arg5, jint arg6, jlong arg7, jobject arg8, jint arg9, jint arg10, jlong arg11) {
     ::think::byte_buffer::BufferManager* ptr = (::think::byte_buffer::BufferManager*)jlong_to_ptr(env->GetLongField(obj, JavaCPP_addressFID));
     if (ptr == NULL) {
         env->ThrowNew(JavaCPP_getClass(env, 17), "This pointer address is NULL.");
@@ -1484,9 +1484,18 @@ JNIEXPORT void JNICALL Java_think_byte_1buffer_ByteBuffer_00024BufferManager_rel
     }
     jlong position = env->GetLongField(obj, JavaCPP_positionFID);
     ptr += position;
+    signed char* ptr0 = arg0 == NULL ? NULL : (signed char*)jlong_to_ptr(env->GetLongField(arg0, JavaCPP_addressFID));
+    jlong position0 = arg0 == NULL ? 0 : env->GetLongField(arg0, JavaCPP_positionFID);
+    ptr0 += position0;
+    int* ptr2 = arg2 == NULL ? NULL : (int*)jlong_to_ptr(env->GetLongField(arg2, JavaCPP_addressFID));
+    jlong position2 = arg2 == NULL ? 0 : env->GetLongField(arg2, JavaCPP_positionFID);
+    ptr2 += position2;
+    int* ptr8 = arg8 == NULL ? NULL : (int*)jlong_to_ptr(env->GetLongField(arg8, JavaCPP_addressFID));
+    jlong position8 = arg8 == NULL ? 0 : env->GetLongField(arg8, JavaCPP_positionFID);
+    ptr8 += position8;
     jthrowable exc = NULL;
     try {
-        ptr->release_buffer((int64_t)arg0);
+        ptr->indexed_copy((const think::byte_buffer::BufferManager::byte_t*)ptr0, (int64_t)arg1, (const int*)ptr2, arg3, arg4, (int64_t)arg5, (think::byte_buffer::Datatype::Enum)arg6, (int64_t)arg7, (const int*)ptr8, arg9, arg10, (int64_t)arg11);
     } catch (...) {
         exc = JavaCPP_handleException(env, 18);
     }
@@ -1495,7 +1504,7 @@ JNIEXPORT void JNICALL Java_think_byte_1buffer_ByteBuffer_00024BufferManager_rel
         env->Throw(exc);
     }
 }
-JNIEXPORT void JNICALL Java_think_byte_1buffer_ByteBuffer_00024BufferManager_set_1value__JIJBJ(JNIEnv* env, jobject obj, jlong arg0, jint arg1, jlong arg2, jbyte arg3, jlong arg4) {
+JNIEXPORT void JNICALL Java_think_byte_1buffer_ByteBuffer_00024BufferManager_indexed_1copy__Lthink_byte_1buffer_ByteBuffer_2JLjava_nio_IntBuffer_2IIJIJLjava_nio_IntBuffer_2IIJ(JNIEnv* env, jobject obj, jobject arg0, jlong arg1, jobject arg2, jint arg3, jint arg4, jlong arg5, jint arg6, jlong arg7, jobject arg8, jint arg9, jint arg10, jlong arg11) {
     ::think::byte_buffer::BufferManager* ptr = (::think::byte_buffer::BufferManager*)jlong_to_ptr(env->GetLongField(obj, JavaCPP_addressFID));
     if (ptr == NULL) {
         env->ThrowNew(JavaCPP_getClass(env, 17), "This pointer address is NULL.");
@@ -1503,9 +1512,85 @@ JNIEXPORT void JNICALL Java_think_byte_1buffer_ByteBuffer_00024BufferManager_set
     }
     jlong position = env->GetLongField(obj, JavaCPP_positionFID);
     ptr += position;
+    jobject ptr0 = arg0;
+    int* ptr2 = arg2 == NULL ? NULL : (int*)env->GetDirectBufferAddress(arg2);
+    jintArray arr2 = NULL;
+    if (arg2 != NULL && ptr2 == NULL) {
+        arr2 = (jintArray)env->CallObjectMethod(arg2, JavaCPP_arrayMID);
+        if (env->ExceptionOccurred() != NULL) {
+            env->ExceptionClear();
+        } else {
+            ptr2 = arr2 == NULL ? NULL : env->GetIntArrayElements(arr2, NULL);
+        }
+    }
+    int* ptr8 = arg8 == NULL ? NULL : (int*)env->GetDirectBufferAddress(arg8);
+    jintArray arr8 = NULL;
+    if (arg8 != NULL && ptr8 == NULL) {
+        arr8 = (jintArray)env->CallObjectMethod(arg8, JavaCPP_arrayMID);
+        if (env->ExceptionOccurred() != NULL) {
+            env->ExceptionClear();
+        } else {
+            ptr8 = arr8 == NULL ? NULL : env->GetIntArrayElements(arr8, NULL);
+        }
+    }
     jthrowable exc = NULL;
     try {
-        ptr->set_value((int64_t)arg0, (think::byte_buffer::Datatype::Enum)arg1, (int64_t)arg2, (unsigned char)arg3, (int64_t)arg4);
+        ptr->indexed_copy((const think::byte_buffer::BufferManager::byte_t*)ptr0, (int64_t)arg1, (const int*)ptr2, arg3, arg4, (int64_t)arg5, (think::byte_buffer::Datatype::Enum)arg6, (int64_t)arg7, (const int*)ptr8, arg9, arg10, (int64_t)arg11);
+    } catch (...) {
+        exc = JavaCPP_handleException(env, 18);
+    }
+
+    if (arr2 != NULL) env->ReleaseIntArrayElements(arr2, (jint*)ptr2, JNI_ABORT);
+    if (arr8 != NULL) env->ReleaseIntArrayElements(arr8, (jint*)ptr8, JNI_ABORT);
+    if (exc != NULL) {
+        env->Throw(exc);
+    }
+}
+JNIEXPORT void JNICALL Java_think_byte_1buffer_ByteBuffer_00024BufferManager_indexed_1copy___3BJ_3IIIJIJ_3IIIJ(JNIEnv* env, jobject obj, jbyteArray arg0, jlong arg1, jintArray arg2, jint arg3, jint arg4, jlong arg5, jint arg6, jlong arg7, jintArray arg8, jint arg9, jint arg10, jlong arg11) {
+    ::think::byte_buffer::BufferManager* ptr = (::think::byte_buffer::BufferManager*)jlong_to_ptr(env->GetLongField(obj, JavaCPP_addressFID));
+    if (ptr == NULL) {
+        env->ThrowNew(JavaCPP_getClass(env, 17), "This pointer address is NULL.");
+        return;
+    }
+    jlong position = env->GetLongField(obj, JavaCPP_positionFID);
+    ptr += position;
+    signed char* ptr0 = arg0 == NULL ? NULL : env->GetByteArrayElements(arg0, NULL);
+    int* ptr2 = arg2 == NULL ? NULL : env->GetIntArrayElements(arg2, NULL);
+    int* ptr8 = arg8 == NULL ? NULL : env->GetIntArrayElements(arg8, NULL);
+    jthrowable exc = NULL;
+    try {
+        ptr->indexed_copy((const think::byte_buffer::BufferManager::byte_t*)ptr0, (int64_t)arg1, (const int*)ptr2, arg3, arg4, (int64_t)arg5, (think::byte_buffer::Datatype::Enum)arg6, (int64_t)arg7, (const int*)ptr8, arg9, arg10, (int64_t)arg11);
+    } catch (...) {
+        exc = JavaCPP_handleException(env, 18);
+    }
+
+    if (arg0 != NULL) env->ReleaseByteArrayElements(arg0, (jbyte*)ptr0, JNI_ABORT);
+    if (arg2 != NULL) env->ReleaseIntArrayElements(arg2, (jint*)ptr2, JNI_ABORT);
+    if (arg8 != NULL) env->ReleaseIntArrayElements(arg8, (jint*)ptr8, JNI_ABORT);
+    if (exc != NULL) {
+        env->Throw(exc);
+    }
+}
+JNIEXPORT void JNICALL Java_think_byte_1buffer_ByteBuffer_00024BufferManager_indexed_1copy__Lorg_bytedeco_javacpp_ShortPointer_2JLorg_bytedeco_javacpp_IntPointer_2IIJIJLorg_bytedeco_javacpp_IntPointer_2IIJ(JNIEnv* env, jobject obj, jobject arg0, jlong arg1, jobject arg2, jint arg3, jint arg4, jlong arg5, jint arg6, jlong arg7, jobject arg8, jint arg9, jint arg10, jlong arg11) {
+    ::think::byte_buffer::BufferManager* ptr = (::think::byte_buffer::BufferManager*)jlong_to_ptr(env->GetLongField(obj, JavaCPP_addressFID));
+    if (ptr == NULL) {
+        env->ThrowNew(JavaCPP_getClass(env, 17), "This pointer address is NULL.");
+        return;
+    }
+    jlong position = env->GetLongField(obj, JavaCPP_positionFID);
+    ptr += position;
+    short* ptr0 = arg0 == NULL ? NULL : (short*)jlong_to_ptr(env->GetLongField(arg0, JavaCPP_addressFID));
+    jlong position0 = arg0 == NULL ? 0 : env->GetLongField(arg0, JavaCPP_positionFID);
+    ptr0 += position0;
+    int* ptr2 = arg2 == NULL ? NULL : (int*)jlong_to_ptr(env->GetLongField(arg2, JavaCPP_addressFID));
+    jlong position2 = arg2 == NULL ? 0 : env->GetLongField(arg2, JavaCPP_positionFID);
+    ptr2 += position2;
+    int* ptr8 = arg8 == NULL ? NULL : (int*)jlong_to_ptr(env->GetLongField(arg8, JavaCPP_addressFID));
+    jlong position8 = arg8 == NULL ? 0 : env->GetLongField(arg8, JavaCPP_positionFID);
+    ptr8 += position8;
+    jthrowable exc = NULL;
+    try {
+        ptr->indexed_copy((const short*)ptr0, (int64_t)arg1, (const int*)ptr2, arg3, arg4, (int64_t)arg5, (think::byte_buffer::Datatype::Enum)arg6, (int64_t)arg7, (const int*)ptr8, arg9, arg10, (int64_t)arg11);
     } catch (...) {
         exc = JavaCPP_handleException(env, 18);
     }
@@ -1514,7 +1599,1213 @@ JNIEXPORT void JNICALL Java_think_byte_1buffer_ByteBuffer_00024BufferManager_set
         env->Throw(exc);
     }
 }
-JNIEXPORT void JNICALL Java_think_byte_1buffer_ByteBuffer_00024BufferManager_set_1value__JIJFJ(JNIEnv* env, jobject obj, jlong arg0, jint arg1, jlong arg2, jfloat arg3, jlong arg4) {
+JNIEXPORT void JNICALL Java_think_byte_1buffer_ByteBuffer_00024BufferManager_indexed_1copy__JIJ_3III_3DJ_3IIIJ(JNIEnv* env, jobject obj, jlong arg0, jint arg1, jlong arg2, jintArray arg3, jint arg4, jint arg5, jdoubleArray arg6, jlong arg7, jintArray arg8, jint arg9, jint arg10, jlong arg11) {
+    ::think::byte_buffer::BufferManager* ptr = (::think::byte_buffer::BufferManager*)jlong_to_ptr(env->GetLongField(obj, JavaCPP_addressFID));
+    if (ptr == NULL) {
+        env->ThrowNew(JavaCPP_getClass(env, 17), "This pointer address is NULL.");
+        return;
+    }
+    jlong position = env->GetLongField(obj, JavaCPP_positionFID);
+    ptr += position;
+    int* ptr3 = arg3 == NULL ? NULL : env->GetIntArrayElements(arg3, NULL);
+    double* ptr6 = arg6 == NULL ? NULL : env->GetDoubleArrayElements(arg6, NULL);
+    int* ptr8 = arg8 == NULL ? NULL : env->GetIntArrayElements(arg8, NULL);
+    jthrowable exc = NULL;
+    try {
+        ptr->indexed_copy((int64_t)arg0, (think::byte_buffer::Datatype::Enum)arg1, (int64_t)arg2, (const int*)ptr3, arg4, arg5, ptr6, (int64_t)arg7, (const int*)ptr8, arg9, arg10, (int64_t)arg11);
+    } catch (...) {
+        exc = JavaCPP_handleException(env, 18);
+    }
+
+    if (arg3 != NULL) env->ReleaseIntArrayElements(arg3, (jint*)ptr3, JNI_ABORT);
+    if (arg6 != NULL) env->ReleaseDoubleArrayElements(arg6, (jdouble*)ptr6, 0);
+    if (arg8 != NULL) env->ReleaseIntArrayElements(arg8, (jint*)ptr8, JNI_ABORT);
+    if (exc != NULL) {
+        env->Throw(exc);
+    }
+}
+JNIEXPORT void JNICALL Java_think_byte_1buffer_ByteBuffer_00024BufferManager_indexed_1copy__JIJLjava_nio_IntBuffer_2IILjava_nio_DoubleBuffer_2JLjava_nio_IntBuffer_2IIJ(JNIEnv* env, jobject obj, jlong arg0, jint arg1, jlong arg2, jobject arg3, jint arg4, jint arg5, jobject arg6, jlong arg7, jobject arg8, jint arg9, jint arg10, jlong arg11) {
+    ::think::byte_buffer::BufferManager* ptr = (::think::byte_buffer::BufferManager*)jlong_to_ptr(env->GetLongField(obj, JavaCPP_addressFID));
+    if (ptr == NULL) {
+        env->ThrowNew(JavaCPP_getClass(env, 17), "This pointer address is NULL.");
+        return;
+    }
+    jlong position = env->GetLongField(obj, JavaCPP_positionFID);
+    ptr += position;
+    int* ptr3 = arg3 == NULL ? NULL : (int*)env->GetDirectBufferAddress(arg3);
+    jintArray arr3 = NULL;
+    if (arg3 != NULL && ptr3 == NULL) {
+        arr3 = (jintArray)env->CallObjectMethod(arg3, JavaCPP_arrayMID);
+        if (env->ExceptionOccurred() != NULL) {
+            env->ExceptionClear();
+        } else {
+            ptr3 = arr3 == NULL ? NULL : env->GetIntArrayElements(arr3, NULL);
+        }
+    }
+    double* ptr6 = arg6 == NULL ? NULL : (double*)env->GetDirectBufferAddress(arg6);
+    jdoubleArray arr6 = NULL;
+    if (arg6 != NULL && ptr6 == NULL) {
+        arr6 = (jdoubleArray)env->CallObjectMethod(arg6, JavaCPP_arrayMID);
+        if (env->ExceptionOccurred() != NULL) {
+            env->ExceptionClear();
+        } else {
+            ptr6 = arr6 == NULL ? NULL : env->GetDoubleArrayElements(arr6, NULL);
+        }
+    }
+    int* ptr8 = arg8 == NULL ? NULL : (int*)env->GetDirectBufferAddress(arg8);
+    jintArray arr8 = NULL;
+    if (arg8 != NULL && ptr8 == NULL) {
+        arr8 = (jintArray)env->CallObjectMethod(arg8, JavaCPP_arrayMID);
+        if (env->ExceptionOccurred() != NULL) {
+            env->ExceptionClear();
+        } else {
+            ptr8 = arr8 == NULL ? NULL : env->GetIntArrayElements(arr8, NULL);
+        }
+    }
+    jthrowable exc = NULL;
+    try {
+        ptr->indexed_copy((int64_t)arg0, (think::byte_buffer::Datatype::Enum)arg1, (int64_t)arg2, (const int*)ptr3, arg4, arg5, ptr6, (int64_t)arg7, (const int*)ptr8, arg9, arg10, (int64_t)arg11);
+    } catch (...) {
+        exc = JavaCPP_handleException(env, 18);
+    }
+
+    if (arr3 != NULL) env->ReleaseIntArrayElements(arr3, (jint*)ptr3, JNI_ABORT);
+    if (arr6 != NULL) env->ReleaseDoubleArrayElements(arr6, (jdouble*)ptr6, 0);
+    if (arr8 != NULL) env->ReleaseIntArrayElements(arr8, (jint*)ptr8, JNI_ABORT);
+    if (exc != NULL) {
+        env->Throw(exc);
+    }
+}
+JNIEXPORT void JNICALL Java_think_byte_1buffer_ByteBuffer_00024BufferManager_indexed_1copy__JIJLorg_bytedeco_javacpp_IntPointer_2IILorg_bytedeco_javacpp_BytePointer_2JLorg_bytedeco_javacpp_IntPointer_2IIJ(JNIEnv* env, jobject obj, jlong arg0, jint arg1, jlong arg2, jobject arg3, jint arg4, jint arg5, jobject arg6, jlong arg7, jobject arg8, jint arg9, jint arg10, jlong arg11) {
+    ::think::byte_buffer::BufferManager* ptr = (::think::byte_buffer::BufferManager*)jlong_to_ptr(env->GetLongField(obj, JavaCPP_addressFID));
+    if (ptr == NULL) {
+        env->ThrowNew(JavaCPP_getClass(env, 17), "This pointer address is NULL.");
+        return;
+    }
+    jlong position = env->GetLongField(obj, JavaCPP_positionFID);
+    ptr += position;
+    int* ptr3 = arg3 == NULL ? NULL : (int*)jlong_to_ptr(env->GetLongField(arg3, JavaCPP_addressFID));
+    jlong position3 = arg3 == NULL ? 0 : env->GetLongField(arg3, JavaCPP_positionFID);
+    ptr3 += position3;
+    signed char* ptr6 = arg6 == NULL ? NULL : (signed char*)jlong_to_ptr(env->GetLongField(arg6, JavaCPP_addressFID));
+    jlong position6 = arg6 == NULL ? 0 : env->GetLongField(arg6, JavaCPP_positionFID);
+    ptr6 += position6;
+    int* ptr8 = arg8 == NULL ? NULL : (int*)jlong_to_ptr(env->GetLongField(arg8, JavaCPP_addressFID));
+    jlong position8 = arg8 == NULL ? 0 : env->GetLongField(arg8, JavaCPP_positionFID);
+    ptr8 += position8;
+    jthrowable exc = NULL;
+    try {
+        ptr->indexed_copy((int64_t)arg0, (think::byte_buffer::Datatype::Enum)arg1, (int64_t)arg2, (const int*)ptr3, arg4, arg5, (think::byte_buffer::BufferManager::byte_t*)ptr6, (int64_t)arg7, (const int*)ptr8, arg9, arg10, (int64_t)arg11);
+    } catch (...) {
+        exc = JavaCPP_handleException(env, 18);
+    }
+
+    if (exc != NULL) {
+        env->Throw(exc);
+    }
+}
+JNIEXPORT void JNICALL Java_think_byte_1buffer_ByteBuffer_00024BufferManager_indexed_1copy__Ljava_nio_IntBuffer_2JLjava_nio_IntBuffer_2IIJIJLjava_nio_IntBuffer_2IIJ(JNIEnv* env, jobject obj, jobject arg0, jlong arg1, jobject arg2, jint arg3, jint arg4, jlong arg5, jint arg6, jlong arg7, jobject arg8, jint arg9, jint arg10, jlong arg11) {
+    ::think::byte_buffer::BufferManager* ptr = (::think::byte_buffer::BufferManager*)jlong_to_ptr(env->GetLongField(obj, JavaCPP_addressFID));
+    if (ptr == NULL) {
+        env->ThrowNew(JavaCPP_getClass(env, 17), "This pointer address is NULL.");
+        return;
+    }
+    jlong position = env->GetLongField(obj, JavaCPP_positionFID);
+    ptr += position;
+    int* ptr0 = arg0 == NULL ? NULL : (int*)env->GetDirectBufferAddress(arg0);
+    jintArray arr0 = NULL;
+    if (arg0 != NULL && ptr0 == NULL) {
+        arr0 = (jintArray)env->CallObjectMethod(arg0, JavaCPP_arrayMID);
+        if (env->ExceptionOccurred() != NULL) {
+            env->ExceptionClear();
+        } else {
+            ptr0 = arr0 == NULL ? NULL : env->GetIntArrayElements(arr0, NULL);
+        }
+    }
+    int* ptr2 = arg2 == NULL ? NULL : (int*)env->GetDirectBufferAddress(arg2);
+    jintArray arr2 = NULL;
+    if (arg2 != NULL && ptr2 == NULL) {
+        arr2 = (jintArray)env->CallObjectMethod(arg2, JavaCPP_arrayMID);
+        if (env->ExceptionOccurred() != NULL) {
+            env->ExceptionClear();
+        } else {
+            ptr2 = arr2 == NULL ? NULL : env->GetIntArrayElements(arr2, NULL);
+        }
+    }
+    int* ptr8 = arg8 == NULL ? NULL : (int*)env->GetDirectBufferAddress(arg8);
+    jintArray arr8 = NULL;
+    if (arg8 != NULL && ptr8 == NULL) {
+        arr8 = (jintArray)env->CallObjectMethod(arg8, JavaCPP_arrayMID);
+        if (env->ExceptionOccurred() != NULL) {
+            env->ExceptionClear();
+        } else {
+            ptr8 = arr8 == NULL ? NULL : env->GetIntArrayElements(arr8, NULL);
+        }
+    }
+    jthrowable exc = NULL;
+    try {
+        ptr->indexed_copy((const int*)ptr0, (int64_t)arg1, (const int*)ptr2, arg3, arg4, (int64_t)arg5, (think::byte_buffer::Datatype::Enum)arg6, (int64_t)arg7, (const int*)ptr8, arg9, arg10, (int64_t)arg11);
+    } catch (...) {
+        exc = JavaCPP_handleException(env, 18);
+    }
+
+    if (arr0 != NULL) env->ReleaseIntArrayElements(arr0, (jint*)ptr0, JNI_ABORT);
+    if (arr2 != NULL) env->ReleaseIntArrayElements(arr2, (jint*)ptr2, JNI_ABORT);
+    if (arr8 != NULL) env->ReleaseIntArrayElements(arr8, (jint*)ptr8, JNI_ABORT);
+    if (exc != NULL) {
+        env->Throw(exc);
+    }
+}
+JNIEXPORT void JNICALL Java_think_byte_1buffer_ByteBuffer_00024BufferManager_indexed_1copy___3IJ_3IIIJIJ_3IIIJ(JNIEnv* env, jobject obj, jintArray arg0, jlong arg1, jintArray arg2, jint arg3, jint arg4, jlong arg5, jint arg6, jlong arg7, jintArray arg8, jint arg9, jint arg10, jlong arg11) {
+    ::think::byte_buffer::BufferManager* ptr = (::think::byte_buffer::BufferManager*)jlong_to_ptr(env->GetLongField(obj, JavaCPP_addressFID));
+    if (ptr == NULL) {
+        env->ThrowNew(JavaCPP_getClass(env, 17), "This pointer address is NULL.");
+        return;
+    }
+    jlong position = env->GetLongField(obj, JavaCPP_positionFID);
+    ptr += position;
+    int* ptr0 = arg0 == NULL ? NULL : env->GetIntArrayElements(arg0, NULL);
+    int* ptr2 = arg2 == NULL ? NULL : env->GetIntArrayElements(arg2, NULL);
+    int* ptr8 = arg8 == NULL ? NULL : env->GetIntArrayElements(arg8, NULL);
+    jthrowable exc = NULL;
+    try {
+        ptr->indexed_copy((const int*)ptr0, (int64_t)arg1, (const int*)ptr2, arg3, arg4, (int64_t)arg5, (think::byte_buffer::Datatype::Enum)arg6, (int64_t)arg7, (const int*)ptr8, arg9, arg10, (int64_t)arg11);
+    } catch (...) {
+        exc = JavaCPP_handleException(env, 18);
+    }
+
+    if (arg0 != NULL) env->ReleaseIntArrayElements(arg0, (jint*)ptr0, JNI_ABORT);
+    if (arg2 != NULL) env->ReleaseIntArrayElements(arg2, (jint*)ptr2, JNI_ABORT);
+    if (arg8 != NULL) env->ReleaseIntArrayElements(arg8, (jint*)ptr8, JNI_ABORT);
+    if (exc != NULL) {
+        env->Throw(exc);
+    }
+}
+JNIEXPORT void JNICALL Java_think_byte_1buffer_ByteBuffer_00024BufferManager_indexed_1copy__Lorg_bytedeco_javacpp_LongPointer_2JLorg_bytedeco_javacpp_IntPointer_2IIJIJLorg_bytedeco_javacpp_IntPointer_2IIJ(JNIEnv* env, jobject obj, jobject arg0, jlong arg1, jobject arg2, jint arg3, jint arg4, jlong arg5, jint arg6, jlong arg7, jobject arg8, jint arg9, jint arg10, jlong arg11) {
+    ::think::byte_buffer::BufferManager* ptr = (::think::byte_buffer::BufferManager*)jlong_to_ptr(env->GetLongField(obj, JavaCPP_addressFID));
+    if (ptr == NULL) {
+        env->ThrowNew(JavaCPP_getClass(env, 17), "This pointer address is NULL.");
+        return;
+    }
+    jlong position = env->GetLongField(obj, JavaCPP_positionFID);
+    ptr += position;
+    jlong* ptr0 = arg0 == NULL ? NULL : (jlong*)jlong_to_ptr(env->GetLongField(arg0, JavaCPP_addressFID));
+    jlong position0 = arg0 == NULL ? 0 : env->GetLongField(arg0, JavaCPP_positionFID);
+    ptr0 += position0;
+    int* ptr2 = arg2 == NULL ? NULL : (int*)jlong_to_ptr(env->GetLongField(arg2, JavaCPP_addressFID));
+    jlong position2 = arg2 == NULL ? 0 : env->GetLongField(arg2, JavaCPP_positionFID);
+    ptr2 += position2;
+    int* ptr8 = arg8 == NULL ? NULL : (int*)jlong_to_ptr(env->GetLongField(arg8, JavaCPP_addressFID));
+    jlong position8 = arg8 == NULL ? 0 : env->GetLongField(arg8, JavaCPP_positionFID);
+    ptr8 += position8;
+    jthrowable exc = NULL;
+    try {
+        ptr->indexed_copy((const int64_t*)ptr0, (int64_t)arg1, (const int*)ptr2, arg3, arg4, (int64_t)arg5, (think::byte_buffer::Datatype::Enum)arg6, (int64_t)arg7, (const int*)ptr8, arg9, arg10, (int64_t)arg11);
+    } catch (...) {
+        exc = JavaCPP_handleException(env, 18);
+    }
+
+    if (exc != NULL) {
+        env->Throw(exc);
+    }
+}
+JNIEXPORT void JNICALL Java_think_byte_1buffer_ByteBuffer_00024BufferManager_indexed_1copy__Ljava_nio_LongBuffer_2JLjava_nio_IntBuffer_2IIJIJLjava_nio_IntBuffer_2IIJ(JNIEnv* env, jobject obj, jobject arg0, jlong arg1, jobject arg2, jint arg3, jint arg4, jlong arg5, jint arg6, jlong arg7, jobject arg8, jint arg9, jint arg10, jlong arg11) {
+    ::think::byte_buffer::BufferManager* ptr = (::think::byte_buffer::BufferManager*)jlong_to_ptr(env->GetLongField(obj, JavaCPP_addressFID));
+    if (ptr == NULL) {
+        env->ThrowNew(JavaCPP_getClass(env, 17), "This pointer address is NULL.");
+        return;
+    }
+    jlong position = env->GetLongField(obj, JavaCPP_positionFID);
+    ptr += position;
+    jlong* ptr0 = arg0 == NULL ? NULL : (jlong*)env->GetDirectBufferAddress(arg0);
+    jlongArray arr0 = NULL;
+    if (arg0 != NULL && ptr0 == NULL) {
+        arr0 = (jlongArray)env->CallObjectMethod(arg0, JavaCPP_arrayMID);
+        if (env->ExceptionOccurred() != NULL) {
+            env->ExceptionClear();
+        } else {
+            ptr0 = arr0 == NULL ? NULL : env->GetLongArrayElements(arr0, NULL);
+        }
+    }
+    int* ptr2 = arg2 == NULL ? NULL : (int*)env->GetDirectBufferAddress(arg2);
+    jintArray arr2 = NULL;
+    if (arg2 != NULL && ptr2 == NULL) {
+        arr2 = (jintArray)env->CallObjectMethod(arg2, JavaCPP_arrayMID);
+        if (env->ExceptionOccurred() != NULL) {
+            env->ExceptionClear();
+        } else {
+            ptr2 = arr2 == NULL ? NULL : env->GetIntArrayElements(arr2, NULL);
+        }
+    }
+    int* ptr8 = arg8 == NULL ? NULL : (int*)env->GetDirectBufferAddress(arg8);
+    jintArray arr8 = NULL;
+    if (arg8 != NULL && ptr8 == NULL) {
+        arr8 = (jintArray)env->CallObjectMethod(arg8, JavaCPP_arrayMID);
+        if (env->ExceptionOccurred() != NULL) {
+            env->ExceptionClear();
+        } else {
+            ptr8 = arr8 == NULL ? NULL : env->GetIntArrayElements(arr8, NULL);
+        }
+    }
+    jthrowable exc = NULL;
+    try {
+        ptr->indexed_copy((const int64_t*)ptr0, (int64_t)arg1, (const int*)ptr2, arg3, arg4, (int64_t)arg5, (think::byte_buffer::Datatype::Enum)arg6, (int64_t)arg7, (const int*)ptr8, arg9, arg10, (int64_t)arg11);
+    } catch (...) {
+        exc = JavaCPP_handleException(env, 18);
+    }
+
+    if (arr0 != NULL) env->ReleaseLongArrayElements(arr0, (jlong*)ptr0, JNI_ABORT);
+    if (arr2 != NULL) env->ReleaseIntArrayElements(arr2, (jint*)ptr2, JNI_ABORT);
+    if (arr8 != NULL) env->ReleaseIntArrayElements(arr8, (jint*)ptr8, JNI_ABORT);
+    if (exc != NULL) {
+        env->Throw(exc);
+    }
+}
+JNIEXPORT void JNICALL Java_think_byte_1buffer_ByteBuffer_00024BufferManager_indexed_1copy__Lorg_bytedeco_javacpp_IntPointer_2JLorg_bytedeco_javacpp_IntPointer_2IIJIJLorg_bytedeco_javacpp_IntPointer_2IIJ(JNIEnv* env, jobject obj, jobject arg0, jlong arg1, jobject arg2, jint arg3, jint arg4, jlong arg5, jint arg6, jlong arg7, jobject arg8, jint arg9, jint arg10, jlong arg11) {
+    ::think::byte_buffer::BufferManager* ptr = (::think::byte_buffer::BufferManager*)jlong_to_ptr(env->GetLongField(obj, JavaCPP_addressFID));
+    if (ptr == NULL) {
+        env->ThrowNew(JavaCPP_getClass(env, 17), "This pointer address is NULL.");
+        return;
+    }
+    jlong position = env->GetLongField(obj, JavaCPP_positionFID);
+    ptr += position;
+    int* ptr0 = arg0 == NULL ? NULL : (int*)jlong_to_ptr(env->GetLongField(arg0, JavaCPP_addressFID));
+    jlong position0 = arg0 == NULL ? 0 : env->GetLongField(arg0, JavaCPP_positionFID);
+    ptr0 += position0;
+    int* ptr2 = arg2 == NULL ? NULL : (int*)jlong_to_ptr(env->GetLongField(arg2, JavaCPP_addressFID));
+    jlong position2 = arg2 == NULL ? 0 : env->GetLongField(arg2, JavaCPP_positionFID);
+    ptr2 += position2;
+    int* ptr8 = arg8 == NULL ? NULL : (int*)jlong_to_ptr(env->GetLongField(arg8, JavaCPP_addressFID));
+    jlong position8 = arg8 == NULL ? 0 : env->GetLongField(arg8, JavaCPP_positionFID);
+    ptr8 += position8;
+    jthrowable exc = NULL;
+    try {
+        ptr->indexed_copy((const int*)ptr0, (int64_t)arg1, (const int*)ptr2, arg3, arg4, (int64_t)arg5, (think::byte_buffer::Datatype::Enum)arg6, (int64_t)arg7, (const int*)ptr8, arg9, arg10, (int64_t)arg11);
+    } catch (...) {
+        exc = JavaCPP_handleException(env, 18);
+    }
+
+    if (exc != NULL) {
+        env->Throw(exc);
+    }
+}
+JNIEXPORT void JNICALL Java_think_byte_1buffer_ByteBuffer_00024BufferManager_indexed_1copy___3SJ_3IIIJIJ_3IIIJ(JNIEnv* env, jobject obj, jshortArray arg0, jlong arg1, jintArray arg2, jint arg3, jint arg4, jlong arg5, jint arg6, jlong arg7, jintArray arg8, jint arg9, jint arg10, jlong arg11) {
+    ::think::byte_buffer::BufferManager* ptr = (::think::byte_buffer::BufferManager*)jlong_to_ptr(env->GetLongField(obj, JavaCPP_addressFID));
+    if (ptr == NULL) {
+        env->ThrowNew(JavaCPP_getClass(env, 17), "This pointer address is NULL.");
+        return;
+    }
+    jlong position = env->GetLongField(obj, JavaCPP_positionFID);
+    ptr += position;
+    short* ptr0 = arg0 == NULL ? NULL : env->GetShortArrayElements(arg0, NULL);
+    int* ptr2 = arg2 == NULL ? NULL : env->GetIntArrayElements(arg2, NULL);
+    int* ptr8 = arg8 == NULL ? NULL : env->GetIntArrayElements(arg8, NULL);
+    jthrowable exc = NULL;
+    try {
+        ptr->indexed_copy((const short*)ptr0, (int64_t)arg1, (const int*)ptr2, arg3, arg4, (int64_t)arg5, (think::byte_buffer::Datatype::Enum)arg6, (int64_t)arg7, (const int*)ptr8, arg9, arg10, (int64_t)arg11);
+    } catch (...) {
+        exc = JavaCPP_handleException(env, 18);
+    }
+
+    if (arg0 != NULL) env->ReleaseShortArrayElements(arg0, (jshort*)ptr0, JNI_ABORT);
+    if (arg2 != NULL) env->ReleaseIntArrayElements(arg2, (jint*)ptr2, JNI_ABORT);
+    if (arg8 != NULL) env->ReleaseIntArrayElements(arg8, (jint*)ptr8, JNI_ABORT);
+    if (exc != NULL) {
+        env->Throw(exc);
+    }
+}
+JNIEXPORT void JNICALL Java_think_byte_1buffer_ByteBuffer_00024BufferManager_indexed_1copy__Ljava_nio_ShortBuffer_2JLjava_nio_IntBuffer_2IIJIJLjava_nio_IntBuffer_2IIJ(JNIEnv* env, jobject obj, jobject arg0, jlong arg1, jobject arg2, jint arg3, jint arg4, jlong arg5, jint arg6, jlong arg7, jobject arg8, jint arg9, jint arg10, jlong arg11) {
+    ::think::byte_buffer::BufferManager* ptr = (::think::byte_buffer::BufferManager*)jlong_to_ptr(env->GetLongField(obj, JavaCPP_addressFID));
+    if (ptr == NULL) {
+        env->ThrowNew(JavaCPP_getClass(env, 17), "This pointer address is NULL.");
+        return;
+    }
+    jlong position = env->GetLongField(obj, JavaCPP_positionFID);
+    ptr += position;
+    short* ptr0 = arg0 == NULL ? NULL : (short*)env->GetDirectBufferAddress(arg0);
+    jshortArray arr0 = NULL;
+    if (arg0 != NULL && ptr0 == NULL) {
+        arr0 = (jshortArray)env->CallObjectMethod(arg0, JavaCPP_arrayMID);
+        if (env->ExceptionOccurred() != NULL) {
+            env->ExceptionClear();
+        } else {
+            ptr0 = arr0 == NULL ? NULL : env->GetShortArrayElements(arr0, NULL);
+        }
+    }
+    int* ptr2 = arg2 == NULL ? NULL : (int*)env->GetDirectBufferAddress(arg2);
+    jintArray arr2 = NULL;
+    if (arg2 != NULL && ptr2 == NULL) {
+        arr2 = (jintArray)env->CallObjectMethod(arg2, JavaCPP_arrayMID);
+        if (env->ExceptionOccurred() != NULL) {
+            env->ExceptionClear();
+        } else {
+            ptr2 = arr2 == NULL ? NULL : env->GetIntArrayElements(arr2, NULL);
+        }
+    }
+    int* ptr8 = arg8 == NULL ? NULL : (int*)env->GetDirectBufferAddress(arg8);
+    jintArray arr8 = NULL;
+    if (arg8 != NULL && ptr8 == NULL) {
+        arr8 = (jintArray)env->CallObjectMethod(arg8, JavaCPP_arrayMID);
+        if (env->ExceptionOccurred() != NULL) {
+            env->ExceptionClear();
+        } else {
+            ptr8 = arr8 == NULL ? NULL : env->GetIntArrayElements(arr8, NULL);
+        }
+    }
+    jthrowable exc = NULL;
+    try {
+        ptr->indexed_copy((const short*)ptr0, (int64_t)arg1, (const int*)ptr2, arg3, arg4, (int64_t)arg5, (think::byte_buffer::Datatype::Enum)arg6, (int64_t)arg7, (const int*)ptr8, arg9, arg10, (int64_t)arg11);
+    } catch (...) {
+        exc = JavaCPP_handleException(env, 18);
+    }
+
+    if (arr0 != NULL) env->ReleaseShortArrayElements(arr0, (jshort*)ptr0, JNI_ABORT);
+    if (arr2 != NULL) env->ReleaseIntArrayElements(arr2, (jint*)ptr2, JNI_ABORT);
+    if (arr8 != NULL) env->ReleaseIntArrayElements(arr8, (jint*)ptr8, JNI_ABORT);
+    if (exc != NULL) {
+        env->Throw(exc);
+    }
+}
+JNIEXPORT void JNICALL Java_think_byte_1buffer_ByteBuffer_00024BufferManager_indexed_1copy__JIJ_3III_3JJ_3IIIJ(JNIEnv* env, jobject obj, jlong arg0, jint arg1, jlong arg2, jintArray arg3, jint arg4, jint arg5, jlongArray arg6, jlong arg7, jintArray arg8, jint arg9, jint arg10, jlong arg11) {
+    ::think::byte_buffer::BufferManager* ptr = (::think::byte_buffer::BufferManager*)jlong_to_ptr(env->GetLongField(obj, JavaCPP_addressFID));
+    if (ptr == NULL) {
+        env->ThrowNew(JavaCPP_getClass(env, 17), "This pointer address is NULL.");
+        return;
+    }
+    jlong position = env->GetLongField(obj, JavaCPP_positionFID);
+    ptr += position;
+    int* ptr3 = arg3 == NULL ? NULL : env->GetIntArrayElements(arg3, NULL);
+    jlong* ptr6 = arg6 == NULL ? NULL : env->GetLongArrayElements(arg6, NULL);
+    int* ptr8 = arg8 == NULL ? NULL : env->GetIntArrayElements(arg8, NULL);
+    jthrowable exc = NULL;
+    try {
+        ptr->indexed_copy((int64_t)arg0, (think::byte_buffer::Datatype::Enum)arg1, (int64_t)arg2, (const int*)ptr3, arg4, arg5, (int64_t*)ptr6, (int64_t)arg7, (const int*)ptr8, arg9, arg10, (int64_t)arg11);
+    } catch (...) {
+        exc = JavaCPP_handleException(env, 18);
+    }
+
+    if (arg3 != NULL) env->ReleaseIntArrayElements(arg3, (jint*)ptr3, JNI_ABORT);
+    if (arg6 != NULL) env->ReleaseLongArrayElements(arg6, (jlong*)ptr6, 0);
+    if (arg8 != NULL) env->ReleaseIntArrayElements(arg8, (jint*)ptr8, JNI_ABORT);
+    if (exc != NULL) {
+        env->Throw(exc);
+    }
+}
+JNIEXPORT void JNICALL Java_think_byte_1buffer_ByteBuffer_00024BufferManager_indexed_1copy__JIJLjava_nio_IntBuffer_2IILjava_nio_LongBuffer_2JLjava_nio_IntBuffer_2IIJ(JNIEnv* env, jobject obj, jlong arg0, jint arg1, jlong arg2, jobject arg3, jint arg4, jint arg5, jobject arg6, jlong arg7, jobject arg8, jint arg9, jint arg10, jlong arg11) {
+    ::think::byte_buffer::BufferManager* ptr = (::think::byte_buffer::BufferManager*)jlong_to_ptr(env->GetLongField(obj, JavaCPP_addressFID));
+    if (ptr == NULL) {
+        env->ThrowNew(JavaCPP_getClass(env, 17), "This pointer address is NULL.");
+        return;
+    }
+    jlong position = env->GetLongField(obj, JavaCPP_positionFID);
+    ptr += position;
+    int* ptr3 = arg3 == NULL ? NULL : (int*)env->GetDirectBufferAddress(arg3);
+    jintArray arr3 = NULL;
+    if (arg3 != NULL && ptr3 == NULL) {
+        arr3 = (jintArray)env->CallObjectMethod(arg3, JavaCPP_arrayMID);
+        if (env->ExceptionOccurred() != NULL) {
+            env->ExceptionClear();
+        } else {
+            ptr3 = arr3 == NULL ? NULL : env->GetIntArrayElements(arr3, NULL);
+        }
+    }
+    jlong* ptr6 = arg6 == NULL ? NULL : (jlong*)env->GetDirectBufferAddress(arg6);
+    jlongArray arr6 = NULL;
+    if (arg6 != NULL && ptr6 == NULL) {
+        arr6 = (jlongArray)env->CallObjectMethod(arg6, JavaCPP_arrayMID);
+        if (env->ExceptionOccurred() != NULL) {
+            env->ExceptionClear();
+        } else {
+            ptr6 = arr6 == NULL ? NULL : env->GetLongArrayElements(arr6, NULL);
+        }
+    }
+    int* ptr8 = arg8 == NULL ? NULL : (int*)env->GetDirectBufferAddress(arg8);
+    jintArray arr8 = NULL;
+    if (arg8 != NULL && ptr8 == NULL) {
+        arr8 = (jintArray)env->CallObjectMethod(arg8, JavaCPP_arrayMID);
+        if (env->ExceptionOccurred() != NULL) {
+            env->ExceptionClear();
+        } else {
+            ptr8 = arr8 == NULL ? NULL : env->GetIntArrayElements(arr8, NULL);
+        }
+    }
+    jthrowable exc = NULL;
+    try {
+        ptr->indexed_copy((int64_t)arg0, (think::byte_buffer::Datatype::Enum)arg1, (int64_t)arg2, (const int*)ptr3, arg4, arg5, (int64_t*)ptr6, (int64_t)arg7, (const int*)ptr8, arg9, arg10, (int64_t)arg11);
+    } catch (...) {
+        exc = JavaCPP_handleException(env, 18);
+    }
+
+    if (arr3 != NULL) env->ReleaseIntArrayElements(arr3, (jint*)ptr3, JNI_ABORT);
+    if (arr6 != NULL) env->ReleaseLongArrayElements(arr6, (jlong*)ptr6, 0);
+    if (arr8 != NULL) env->ReleaseIntArrayElements(arr8, (jint*)ptr8, JNI_ABORT);
+    if (exc != NULL) {
+        env->Throw(exc);
+    }
+}
+JNIEXPORT void JNICALL Java_think_byte_1buffer_ByteBuffer_00024BufferManager_indexed_1copy__JIJLorg_bytedeco_javacpp_IntPointer_2IILorg_bytedeco_javacpp_LongPointer_2JLorg_bytedeco_javacpp_IntPointer_2IIJ(JNIEnv* env, jobject obj, jlong arg0, jint arg1, jlong arg2, jobject arg3, jint arg4, jint arg5, jobject arg6, jlong arg7, jobject arg8, jint arg9, jint arg10, jlong arg11) {
+    ::think::byte_buffer::BufferManager* ptr = (::think::byte_buffer::BufferManager*)jlong_to_ptr(env->GetLongField(obj, JavaCPP_addressFID));
+    if (ptr == NULL) {
+        env->ThrowNew(JavaCPP_getClass(env, 17), "This pointer address is NULL.");
+        return;
+    }
+    jlong position = env->GetLongField(obj, JavaCPP_positionFID);
+    ptr += position;
+    int* ptr3 = arg3 == NULL ? NULL : (int*)jlong_to_ptr(env->GetLongField(arg3, JavaCPP_addressFID));
+    jlong position3 = arg3 == NULL ? 0 : env->GetLongField(arg3, JavaCPP_positionFID);
+    ptr3 += position3;
+    jlong* ptr6 = arg6 == NULL ? NULL : (jlong*)jlong_to_ptr(env->GetLongField(arg6, JavaCPP_addressFID));
+    jlong position6 = arg6 == NULL ? 0 : env->GetLongField(arg6, JavaCPP_positionFID);
+    ptr6 += position6;
+    int* ptr8 = arg8 == NULL ? NULL : (int*)jlong_to_ptr(env->GetLongField(arg8, JavaCPP_addressFID));
+    jlong position8 = arg8 == NULL ? 0 : env->GetLongField(arg8, JavaCPP_positionFID);
+    ptr8 += position8;
+    jthrowable exc = NULL;
+    try {
+        ptr->indexed_copy((int64_t)arg0, (think::byte_buffer::Datatype::Enum)arg1, (int64_t)arg2, (const int*)ptr3, arg4, arg5, (int64_t*)ptr6, (int64_t)arg7, (const int*)ptr8, arg9, arg10, (int64_t)arg11);
+    } catch (...) {
+        exc = JavaCPP_handleException(env, 18);
+    }
+
+    if (exc != NULL) {
+        env->Throw(exc);
+    }
+}
+JNIEXPORT void JNICALL Java_think_byte_1buffer_ByteBuffer_00024BufferManager_indexed_1copy__JIJ_3III_3IJ_3IIIJ(JNIEnv* env, jobject obj, jlong arg0, jint arg1, jlong arg2, jintArray arg3, jint arg4, jint arg5, jintArray arg6, jlong arg7, jintArray arg8, jint arg9, jint arg10, jlong arg11) {
+    ::think::byte_buffer::BufferManager* ptr = (::think::byte_buffer::BufferManager*)jlong_to_ptr(env->GetLongField(obj, JavaCPP_addressFID));
+    if (ptr == NULL) {
+        env->ThrowNew(JavaCPP_getClass(env, 17), "This pointer address is NULL.");
+        return;
+    }
+    jlong position = env->GetLongField(obj, JavaCPP_positionFID);
+    ptr += position;
+    int* ptr3 = arg3 == NULL ? NULL : env->GetIntArrayElements(arg3, NULL);
+    int* ptr6 = arg6 == NULL ? NULL : env->GetIntArrayElements(arg6, NULL);
+    int* ptr8 = arg8 == NULL ? NULL : env->GetIntArrayElements(arg8, NULL);
+    jthrowable exc = NULL;
+    try {
+        ptr->indexed_copy((int64_t)arg0, (think::byte_buffer::Datatype::Enum)arg1, (int64_t)arg2, (const int*)ptr3, arg4, arg5, ptr6, (int64_t)arg7, (const int*)ptr8, arg9, arg10, (int64_t)arg11);
+    } catch (...) {
+        exc = JavaCPP_handleException(env, 18);
+    }
+
+    if (arg3 != NULL) env->ReleaseIntArrayElements(arg3, (jint*)ptr3, JNI_ABORT);
+    if (arg6 != NULL) env->ReleaseIntArrayElements(arg6, (jint*)ptr6, 0);
+    if (arg8 != NULL) env->ReleaseIntArrayElements(arg8, (jint*)ptr8, JNI_ABORT);
+    if (exc != NULL) {
+        env->Throw(exc);
+    }
+}
+JNIEXPORT void JNICALL Java_think_byte_1buffer_ByteBuffer_00024BufferManager_indexed_1copy__JIJLorg_bytedeco_javacpp_IntPointer_2IILorg_bytedeco_javacpp_FloatPointer_2JLorg_bytedeco_javacpp_IntPointer_2IIJ(JNIEnv* env, jobject obj, jlong arg0, jint arg1, jlong arg2, jobject arg3, jint arg4, jint arg5, jobject arg6, jlong arg7, jobject arg8, jint arg9, jint arg10, jlong arg11) {
+    ::think::byte_buffer::BufferManager* ptr = (::think::byte_buffer::BufferManager*)jlong_to_ptr(env->GetLongField(obj, JavaCPP_addressFID));
+    if (ptr == NULL) {
+        env->ThrowNew(JavaCPP_getClass(env, 17), "This pointer address is NULL.");
+        return;
+    }
+    jlong position = env->GetLongField(obj, JavaCPP_positionFID);
+    ptr += position;
+    int* ptr3 = arg3 == NULL ? NULL : (int*)jlong_to_ptr(env->GetLongField(arg3, JavaCPP_addressFID));
+    jlong position3 = arg3 == NULL ? 0 : env->GetLongField(arg3, JavaCPP_positionFID);
+    ptr3 += position3;
+    float* ptr6 = arg6 == NULL ? NULL : (float*)jlong_to_ptr(env->GetLongField(arg6, JavaCPP_addressFID));
+    jlong position6 = arg6 == NULL ? 0 : env->GetLongField(arg6, JavaCPP_positionFID);
+    ptr6 += position6;
+    int* ptr8 = arg8 == NULL ? NULL : (int*)jlong_to_ptr(env->GetLongField(arg8, JavaCPP_addressFID));
+    jlong position8 = arg8 == NULL ? 0 : env->GetLongField(arg8, JavaCPP_positionFID);
+    ptr8 += position8;
+    jthrowable exc = NULL;
+    try {
+        ptr->indexed_copy((int64_t)arg0, (think::byte_buffer::Datatype::Enum)arg1, (int64_t)arg2, (const int*)ptr3, arg4, arg5, ptr6, (int64_t)arg7, (const int*)ptr8, arg9, arg10, (int64_t)arg11);
+    } catch (...) {
+        exc = JavaCPP_handleException(env, 18);
+    }
+
+    if (exc != NULL) {
+        env->Throw(exc);
+    }
+}
+JNIEXPORT void JNICALL Java_think_byte_1buffer_ByteBuffer_00024BufferManager_indexed_1copy__JIJLjava_nio_IntBuffer_2IILjava_nio_FloatBuffer_2JLjava_nio_IntBuffer_2IIJ(JNIEnv* env, jobject obj, jlong arg0, jint arg1, jlong arg2, jobject arg3, jint arg4, jint arg5, jobject arg6, jlong arg7, jobject arg8, jint arg9, jint arg10, jlong arg11) {
+    ::think::byte_buffer::BufferManager* ptr = (::think::byte_buffer::BufferManager*)jlong_to_ptr(env->GetLongField(obj, JavaCPP_addressFID));
+    if (ptr == NULL) {
+        env->ThrowNew(JavaCPP_getClass(env, 17), "This pointer address is NULL.");
+        return;
+    }
+    jlong position = env->GetLongField(obj, JavaCPP_positionFID);
+    ptr += position;
+    int* ptr3 = arg3 == NULL ? NULL : (int*)env->GetDirectBufferAddress(arg3);
+    jintArray arr3 = NULL;
+    if (arg3 != NULL && ptr3 == NULL) {
+        arr3 = (jintArray)env->CallObjectMethod(arg3, JavaCPP_arrayMID);
+        if (env->ExceptionOccurred() != NULL) {
+            env->ExceptionClear();
+        } else {
+            ptr3 = arr3 == NULL ? NULL : env->GetIntArrayElements(arr3, NULL);
+        }
+    }
+    float* ptr6 = arg6 == NULL ? NULL : (float*)env->GetDirectBufferAddress(arg6);
+    jfloatArray arr6 = NULL;
+    if (arg6 != NULL && ptr6 == NULL) {
+        arr6 = (jfloatArray)env->CallObjectMethod(arg6, JavaCPP_arrayMID);
+        if (env->ExceptionOccurred() != NULL) {
+            env->ExceptionClear();
+        } else {
+            ptr6 = arr6 == NULL ? NULL : env->GetFloatArrayElements(arr6, NULL);
+        }
+    }
+    int* ptr8 = arg8 == NULL ? NULL : (int*)env->GetDirectBufferAddress(arg8);
+    jintArray arr8 = NULL;
+    if (arg8 != NULL && ptr8 == NULL) {
+        arr8 = (jintArray)env->CallObjectMethod(arg8, JavaCPP_arrayMID);
+        if (env->ExceptionOccurred() != NULL) {
+            env->ExceptionClear();
+        } else {
+            ptr8 = arr8 == NULL ? NULL : env->GetIntArrayElements(arr8, NULL);
+        }
+    }
+    jthrowable exc = NULL;
+    try {
+        ptr->indexed_copy((int64_t)arg0, (think::byte_buffer::Datatype::Enum)arg1, (int64_t)arg2, (const int*)ptr3, arg4, arg5, ptr6, (int64_t)arg7, (const int*)ptr8, arg9, arg10, (int64_t)arg11);
+    } catch (...) {
+        exc = JavaCPP_handleException(env, 18);
+    }
+
+    if (arr3 != NULL) env->ReleaseIntArrayElements(arr3, (jint*)ptr3, JNI_ABORT);
+    if (arr6 != NULL) env->ReleaseFloatArrayElements(arr6, (jfloat*)ptr6, 0);
+    if (arr8 != NULL) env->ReleaseIntArrayElements(arr8, (jint*)ptr8, JNI_ABORT);
+    if (exc != NULL) {
+        env->Throw(exc);
+    }
+}
+JNIEXPORT void JNICALL Java_think_byte_1buffer_ByteBuffer_00024BufferManager_indexed_1copy__JIJ_3III_3FJ_3IIIJ(JNIEnv* env, jobject obj, jlong arg0, jint arg1, jlong arg2, jintArray arg3, jint arg4, jint arg5, jfloatArray arg6, jlong arg7, jintArray arg8, jint arg9, jint arg10, jlong arg11) {
+    ::think::byte_buffer::BufferManager* ptr = (::think::byte_buffer::BufferManager*)jlong_to_ptr(env->GetLongField(obj, JavaCPP_addressFID));
+    if (ptr == NULL) {
+        env->ThrowNew(JavaCPP_getClass(env, 17), "This pointer address is NULL.");
+        return;
+    }
+    jlong position = env->GetLongField(obj, JavaCPP_positionFID);
+    ptr += position;
+    int* ptr3 = arg3 == NULL ? NULL : env->GetIntArrayElements(arg3, NULL);
+    float* ptr6 = arg6 == NULL ? NULL : env->GetFloatArrayElements(arg6, NULL);
+    int* ptr8 = arg8 == NULL ? NULL : env->GetIntArrayElements(arg8, NULL);
+    jthrowable exc = NULL;
+    try {
+        ptr->indexed_copy((int64_t)arg0, (think::byte_buffer::Datatype::Enum)arg1, (int64_t)arg2, (const int*)ptr3, arg4, arg5, ptr6, (int64_t)arg7, (const int*)ptr8, arg9, arg10, (int64_t)arg11);
+    } catch (...) {
+        exc = JavaCPP_handleException(env, 18);
+    }
+
+    if (arg3 != NULL) env->ReleaseIntArrayElements(arg3, (jint*)ptr3, JNI_ABORT);
+    if (arg6 != NULL) env->ReleaseFloatArrayElements(arg6, (jfloat*)ptr6, 0);
+    if (arg8 != NULL) env->ReleaseIntArrayElements(arg8, (jint*)ptr8, JNI_ABORT);
+    if (exc != NULL) {
+        env->Throw(exc);
+    }
+}
+JNIEXPORT void JNICALL Java_think_byte_1buffer_ByteBuffer_00024BufferManager_indexed_1copy__JIJLjava_nio_IntBuffer_2IILjava_nio_ShortBuffer_2JLjava_nio_IntBuffer_2IIJ(JNIEnv* env, jobject obj, jlong arg0, jint arg1, jlong arg2, jobject arg3, jint arg4, jint arg5, jobject arg6, jlong arg7, jobject arg8, jint arg9, jint arg10, jlong arg11) {
+    ::think::byte_buffer::BufferManager* ptr = (::think::byte_buffer::BufferManager*)jlong_to_ptr(env->GetLongField(obj, JavaCPP_addressFID));
+    if (ptr == NULL) {
+        env->ThrowNew(JavaCPP_getClass(env, 17), "This pointer address is NULL.");
+        return;
+    }
+    jlong position = env->GetLongField(obj, JavaCPP_positionFID);
+    ptr += position;
+    int* ptr3 = arg3 == NULL ? NULL : (int*)env->GetDirectBufferAddress(arg3);
+    jintArray arr3 = NULL;
+    if (arg3 != NULL && ptr3 == NULL) {
+        arr3 = (jintArray)env->CallObjectMethod(arg3, JavaCPP_arrayMID);
+        if (env->ExceptionOccurred() != NULL) {
+            env->ExceptionClear();
+        } else {
+            ptr3 = arr3 == NULL ? NULL : env->GetIntArrayElements(arr3, NULL);
+        }
+    }
+    short* ptr6 = arg6 == NULL ? NULL : (short*)env->GetDirectBufferAddress(arg6);
+    jshortArray arr6 = NULL;
+    if (arg6 != NULL && ptr6 == NULL) {
+        arr6 = (jshortArray)env->CallObjectMethod(arg6, JavaCPP_arrayMID);
+        if (env->ExceptionOccurred() != NULL) {
+            env->ExceptionClear();
+        } else {
+            ptr6 = arr6 == NULL ? NULL : env->GetShortArrayElements(arr6, NULL);
+        }
+    }
+    int* ptr8 = arg8 == NULL ? NULL : (int*)env->GetDirectBufferAddress(arg8);
+    jintArray arr8 = NULL;
+    if (arg8 != NULL && ptr8 == NULL) {
+        arr8 = (jintArray)env->CallObjectMethod(arg8, JavaCPP_arrayMID);
+        if (env->ExceptionOccurred() != NULL) {
+            env->ExceptionClear();
+        } else {
+            ptr8 = arr8 == NULL ? NULL : env->GetIntArrayElements(arr8, NULL);
+        }
+    }
+    jthrowable exc = NULL;
+    try {
+        ptr->indexed_copy((int64_t)arg0, (think::byte_buffer::Datatype::Enum)arg1, (int64_t)arg2, (const int*)ptr3, arg4, arg5, ptr6, (int64_t)arg7, (const int*)ptr8, arg9, arg10, (int64_t)arg11);
+    } catch (...) {
+        exc = JavaCPP_handleException(env, 18);
+    }
+
+    if (arr3 != NULL) env->ReleaseIntArrayElements(arr3, (jint*)ptr3, JNI_ABORT);
+    if (arr6 != NULL) env->ReleaseShortArrayElements(arr6, (jshort*)ptr6, 0);
+    if (arr8 != NULL) env->ReleaseIntArrayElements(arr8, (jint*)ptr8, JNI_ABORT);
+    if (exc != NULL) {
+        env->Throw(exc);
+    }
+}
+JNIEXPORT void JNICALL Java_think_byte_1buffer_ByteBuffer_00024BufferManager_indexed_1copy__JIJLorg_bytedeco_javacpp_IntPointer_2IILorg_bytedeco_javacpp_ShortPointer_2JLorg_bytedeco_javacpp_IntPointer_2IIJ(JNIEnv* env, jobject obj, jlong arg0, jint arg1, jlong arg2, jobject arg3, jint arg4, jint arg5, jobject arg6, jlong arg7, jobject arg8, jint arg9, jint arg10, jlong arg11) {
+    ::think::byte_buffer::BufferManager* ptr = (::think::byte_buffer::BufferManager*)jlong_to_ptr(env->GetLongField(obj, JavaCPP_addressFID));
+    if (ptr == NULL) {
+        env->ThrowNew(JavaCPP_getClass(env, 17), "This pointer address is NULL.");
+        return;
+    }
+    jlong position = env->GetLongField(obj, JavaCPP_positionFID);
+    ptr += position;
+    int* ptr3 = arg3 == NULL ? NULL : (int*)jlong_to_ptr(env->GetLongField(arg3, JavaCPP_addressFID));
+    jlong position3 = arg3 == NULL ? 0 : env->GetLongField(arg3, JavaCPP_positionFID);
+    ptr3 += position3;
+    short* ptr6 = arg6 == NULL ? NULL : (short*)jlong_to_ptr(env->GetLongField(arg6, JavaCPP_addressFID));
+    jlong position6 = arg6 == NULL ? 0 : env->GetLongField(arg6, JavaCPP_positionFID);
+    ptr6 += position6;
+    int* ptr8 = arg8 == NULL ? NULL : (int*)jlong_to_ptr(env->GetLongField(arg8, JavaCPP_addressFID));
+    jlong position8 = arg8 == NULL ? 0 : env->GetLongField(arg8, JavaCPP_positionFID);
+    ptr8 += position8;
+    jthrowable exc = NULL;
+    try {
+        ptr->indexed_copy((int64_t)arg0, (think::byte_buffer::Datatype::Enum)arg1, (int64_t)arg2, (const int*)ptr3, arg4, arg5, ptr6, (int64_t)arg7, (const int*)ptr8, arg9, arg10, (int64_t)arg11);
+    } catch (...) {
+        exc = JavaCPP_handleException(env, 18);
+    }
+
+    if (exc != NULL) {
+        env->Throw(exc);
+    }
+}
+JNIEXPORT void JNICALL Java_think_byte_1buffer_ByteBuffer_00024BufferManager_indexed_1copy__JIJ_3III_3BJ_3IIIJ(JNIEnv* env, jobject obj, jlong arg0, jint arg1, jlong arg2, jintArray arg3, jint arg4, jint arg5, jbyteArray arg6, jlong arg7, jintArray arg8, jint arg9, jint arg10, jlong arg11) {
+    ::think::byte_buffer::BufferManager* ptr = (::think::byte_buffer::BufferManager*)jlong_to_ptr(env->GetLongField(obj, JavaCPP_addressFID));
+    if (ptr == NULL) {
+        env->ThrowNew(JavaCPP_getClass(env, 17), "This pointer address is NULL.");
+        return;
+    }
+    jlong position = env->GetLongField(obj, JavaCPP_positionFID);
+    ptr += position;
+    int* ptr3 = arg3 == NULL ? NULL : env->GetIntArrayElements(arg3, NULL);
+    signed char* ptr6 = arg6 == NULL ? NULL : env->GetByteArrayElements(arg6, NULL);
+    int* ptr8 = arg8 == NULL ? NULL : env->GetIntArrayElements(arg8, NULL);
+    jthrowable exc = NULL;
+    try {
+        ptr->indexed_copy((int64_t)arg0, (think::byte_buffer::Datatype::Enum)arg1, (int64_t)arg2, (const int*)ptr3, arg4, arg5, (think::byte_buffer::BufferManager::byte_t*)ptr6, (int64_t)arg7, (const int*)ptr8, arg9, arg10, (int64_t)arg11);
+    } catch (...) {
+        exc = JavaCPP_handleException(env, 18);
+    }
+
+    if (arg3 != NULL) env->ReleaseIntArrayElements(arg3, (jint*)ptr3, JNI_ABORT);
+    if (arg6 != NULL) env->ReleaseByteArrayElements(arg6, (jbyte*)ptr6, 0);
+    if (arg8 != NULL) env->ReleaseIntArrayElements(arg8, (jint*)ptr8, JNI_ABORT);
+    if (exc != NULL) {
+        env->Throw(exc);
+    }
+}
+JNIEXPORT void JNICALL Java_think_byte_1buffer_ByteBuffer_00024BufferManager_indexed_1copy__JIJLjava_nio_IntBuffer_2IILthink_byte_1buffer_ByteBuffer_2JLjava_nio_IntBuffer_2IIJ(JNIEnv* env, jobject obj, jlong arg0, jint arg1, jlong arg2, jobject arg3, jint arg4, jint arg5, jobject arg6, jlong arg7, jobject arg8, jint arg9, jint arg10, jlong arg11) {
+    ::think::byte_buffer::BufferManager* ptr = (::think::byte_buffer::BufferManager*)jlong_to_ptr(env->GetLongField(obj, JavaCPP_addressFID));
+    if (ptr == NULL) {
+        env->ThrowNew(JavaCPP_getClass(env, 17), "This pointer address is NULL.");
+        return;
+    }
+    jlong position = env->GetLongField(obj, JavaCPP_positionFID);
+    ptr += position;
+    int* ptr3 = arg3 == NULL ? NULL : (int*)env->GetDirectBufferAddress(arg3);
+    jintArray arr3 = NULL;
+    if (arg3 != NULL && ptr3 == NULL) {
+        arr3 = (jintArray)env->CallObjectMethod(arg3, JavaCPP_arrayMID);
+        if (env->ExceptionOccurred() != NULL) {
+            env->ExceptionClear();
+        } else {
+            ptr3 = arr3 == NULL ? NULL : env->GetIntArrayElements(arr3, NULL);
+        }
+    }
+    jobject ptr6 = arg6;
+    int* ptr8 = arg8 == NULL ? NULL : (int*)env->GetDirectBufferAddress(arg8);
+    jintArray arr8 = NULL;
+    if (arg8 != NULL && ptr8 == NULL) {
+        arr8 = (jintArray)env->CallObjectMethod(arg8, JavaCPP_arrayMID);
+        if (env->ExceptionOccurred() != NULL) {
+            env->ExceptionClear();
+        } else {
+            ptr8 = arr8 == NULL ? NULL : env->GetIntArrayElements(arr8, NULL);
+        }
+    }
+    jthrowable exc = NULL;
+    try {
+        ptr->indexed_copy((int64_t)arg0, (think::byte_buffer::Datatype::Enum)arg1, (int64_t)arg2, (const int*)ptr3, arg4, arg5, (think::byte_buffer::BufferManager::byte_t*)ptr6, (int64_t)arg7, (const int*)ptr8, arg9, arg10, (int64_t)arg11);
+    } catch (...) {
+        exc = JavaCPP_handleException(env, 18);
+    }
+
+    if (arr3 != NULL) env->ReleaseIntArrayElements(arr3, (jint*)ptr3, JNI_ABORT);
+    if (arr8 != NULL) env->ReleaseIntArrayElements(arr8, (jint*)ptr8, JNI_ABORT);
+    if (exc != NULL) {
+        env->Throw(exc);
+    }
+}
+JNIEXPORT void JNICALL Java_think_byte_1buffer_ByteBuffer_00024BufferManager_indexed_1copy__JIJ_3III_3SJ_3IIIJ(JNIEnv* env, jobject obj, jlong arg0, jint arg1, jlong arg2, jintArray arg3, jint arg4, jint arg5, jshortArray arg6, jlong arg7, jintArray arg8, jint arg9, jint arg10, jlong arg11) {
+    ::think::byte_buffer::BufferManager* ptr = (::think::byte_buffer::BufferManager*)jlong_to_ptr(env->GetLongField(obj, JavaCPP_addressFID));
+    if (ptr == NULL) {
+        env->ThrowNew(JavaCPP_getClass(env, 17), "This pointer address is NULL.");
+        return;
+    }
+    jlong position = env->GetLongField(obj, JavaCPP_positionFID);
+    ptr += position;
+    int* ptr3 = arg3 == NULL ? NULL : env->GetIntArrayElements(arg3, NULL);
+    short* ptr6 = arg6 == NULL ? NULL : env->GetShortArrayElements(arg6, NULL);
+    int* ptr8 = arg8 == NULL ? NULL : env->GetIntArrayElements(arg8, NULL);
+    jthrowable exc = NULL;
+    try {
+        ptr->indexed_copy((int64_t)arg0, (think::byte_buffer::Datatype::Enum)arg1, (int64_t)arg2, (const int*)ptr3, arg4, arg5, ptr6, (int64_t)arg7, (const int*)ptr8, arg9, arg10, (int64_t)arg11);
+    } catch (...) {
+        exc = JavaCPP_handleException(env, 18);
+    }
+
+    if (arg3 != NULL) env->ReleaseIntArrayElements(arg3, (jint*)ptr3, JNI_ABORT);
+    if (arg6 != NULL) env->ReleaseShortArrayElements(arg6, (jshort*)ptr6, 0);
+    if (arg8 != NULL) env->ReleaseIntArrayElements(arg8, (jint*)ptr8, JNI_ABORT);
+    if (exc != NULL) {
+        env->Throw(exc);
+    }
+}
+JNIEXPORT void JNICALL Java_think_byte_1buffer_ByteBuffer_00024BufferManager_indexed_1copy__JIJLorg_bytedeco_javacpp_IntPointer_2IILorg_bytedeco_javacpp_DoublePointer_2JLorg_bytedeco_javacpp_IntPointer_2IIJ(JNIEnv* env, jobject obj, jlong arg0, jint arg1, jlong arg2, jobject arg3, jint arg4, jint arg5, jobject arg6, jlong arg7, jobject arg8, jint arg9, jint arg10, jlong arg11) {
+    ::think::byte_buffer::BufferManager* ptr = (::think::byte_buffer::BufferManager*)jlong_to_ptr(env->GetLongField(obj, JavaCPP_addressFID));
+    if (ptr == NULL) {
+        env->ThrowNew(JavaCPP_getClass(env, 17), "This pointer address is NULL.");
+        return;
+    }
+    jlong position = env->GetLongField(obj, JavaCPP_positionFID);
+    ptr += position;
+    int* ptr3 = arg3 == NULL ? NULL : (int*)jlong_to_ptr(env->GetLongField(arg3, JavaCPP_addressFID));
+    jlong position3 = arg3 == NULL ? 0 : env->GetLongField(arg3, JavaCPP_positionFID);
+    ptr3 += position3;
+    double* ptr6 = arg6 == NULL ? NULL : (double*)jlong_to_ptr(env->GetLongField(arg6, JavaCPP_addressFID));
+    jlong position6 = arg6 == NULL ? 0 : env->GetLongField(arg6, JavaCPP_positionFID);
+    ptr6 += position6;
+    int* ptr8 = arg8 == NULL ? NULL : (int*)jlong_to_ptr(env->GetLongField(arg8, JavaCPP_addressFID));
+    jlong position8 = arg8 == NULL ? 0 : env->GetLongField(arg8, JavaCPP_positionFID);
+    ptr8 += position8;
+    jthrowable exc = NULL;
+    try {
+        ptr->indexed_copy((int64_t)arg0, (think::byte_buffer::Datatype::Enum)arg1, (int64_t)arg2, (const int*)ptr3, arg4, arg5, ptr6, (int64_t)arg7, (const int*)ptr8, arg9, arg10, (int64_t)arg11);
+    } catch (...) {
+        exc = JavaCPP_handleException(env, 18);
+    }
+
+    if (exc != NULL) {
+        env->Throw(exc);
+    }
+}
+JNIEXPORT void JNICALL Java_think_byte_1buffer_ByteBuffer_00024BufferManager_indexed_1copy__JIJLjava_nio_IntBuffer_2IILjava_nio_IntBuffer_2JLjava_nio_IntBuffer_2IIJ(JNIEnv* env, jobject obj, jlong arg0, jint arg1, jlong arg2, jobject arg3, jint arg4, jint arg5, jobject arg6, jlong arg7, jobject arg8, jint arg9, jint arg10, jlong arg11) {
+    ::think::byte_buffer::BufferManager* ptr = (::think::byte_buffer::BufferManager*)jlong_to_ptr(env->GetLongField(obj, JavaCPP_addressFID));
+    if (ptr == NULL) {
+        env->ThrowNew(JavaCPP_getClass(env, 17), "This pointer address is NULL.");
+        return;
+    }
+    jlong position = env->GetLongField(obj, JavaCPP_positionFID);
+    ptr += position;
+    int* ptr3 = arg3 == NULL ? NULL : (int*)env->GetDirectBufferAddress(arg3);
+    jintArray arr3 = NULL;
+    if (arg3 != NULL && ptr3 == NULL) {
+        arr3 = (jintArray)env->CallObjectMethod(arg3, JavaCPP_arrayMID);
+        if (env->ExceptionOccurred() != NULL) {
+            env->ExceptionClear();
+        } else {
+            ptr3 = arr3 == NULL ? NULL : env->GetIntArrayElements(arr3, NULL);
+        }
+    }
+    int* ptr6 = arg6 == NULL ? NULL : (int*)env->GetDirectBufferAddress(arg6);
+    jintArray arr6 = NULL;
+    if (arg6 != NULL && ptr6 == NULL) {
+        arr6 = (jintArray)env->CallObjectMethod(arg6, JavaCPP_arrayMID);
+        if (env->ExceptionOccurred() != NULL) {
+            env->ExceptionClear();
+        } else {
+            ptr6 = arr6 == NULL ? NULL : env->GetIntArrayElements(arr6, NULL);
+        }
+    }
+    int* ptr8 = arg8 == NULL ? NULL : (int*)env->GetDirectBufferAddress(arg8);
+    jintArray arr8 = NULL;
+    if (arg8 != NULL && ptr8 == NULL) {
+        arr8 = (jintArray)env->CallObjectMethod(arg8, JavaCPP_arrayMID);
+        if (env->ExceptionOccurred() != NULL) {
+            env->ExceptionClear();
+        } else {
+            ptr8 = arr8 == NULL ? NULL : env->GetIntArrayElements(arr8, NULL);
+        }
+    }
+    jthrowable exc = NULL;
+    try {
+        ptr->indexed_copy((int64_t)arg0, (think::byte_buffer::Datatype::Enum)arg1, (int64_t)arg2, (const int*)ptr3, arg4, arg5, ptr6, (int64_t)arg7, (const int*)ptr8, arg9, arg10, (int64_t)arg11);
+    } catch (...) {
+        exc = JavaCPP_handleException(env, 18);
+    }
+
+    if (arr3 != NULL) env->ReleaseIntArrayElements(arr3, (jint*)ptr3, JNI_ABORT);
+    if (arr6 != NULL) env->ReleaseIntArrayElements(arr6, (jint*)ptr6, 0);
+    if (arr8 != NULL) env->ReleaseIntArrayElements(arr8, (jint*)ptr8, JNI_ABORT);
+    if (exc != NULL) {
+        env->Throw(exc);
+    }
+}
+JNIEXPORT void JNICALL Java_think_byte_1buffer_ByteBuffer_00024BufferManager_indexed_1copy__Ljava_nio_DoubleBuffer_2JLjava_nio_IntBuffer_2IIJIJLjava_nio_IntBuffer_2IIJ(JNIEnv* env, jobject obj, jobject arg0, jlong arg1, jobject arg2, jint arg3, jint arg4, jlong arg5, jint arg6, jlong arg7, jobject arg8, jint arg9, jint arg10, jlong arg11) {
+    ::think::byte_buffer::BufferManager* ptr = (::think::byte_buffer::BufferManager*)jlong_to_ptr(env->GetLongField(obj, JavaCPP_addressFID));
+    if (ptr == NULL) {
+        env->ThrowNew(JavaCPP_getClass(env, 17), "This pointer address is NULL.");
+        return;
+    }
+    jlong position = env->GetLongField(obj, JavaCPP_positionFID);
+    ptr += position;
+    double* ptr0 = arg0 == NULL ? NULL : (double*)env->GetDirectBufferAddress(arg0);
+    jdoubleArray arr0 = NULL;
+    if (arg0 != NULL && ptr0 == NULL) {
+        arr0 = (jdoubleArray)env->CallObjectMethod(arg0, JavaCPP_arrayMID);
+        if (env->ExceptionOccurred() != NULL) {
+            env->ExceptionClear();
+        } else {
+            ptr0 = arr0 == NULL ? NULL : env->GetDoubleArrayElements(arr0, NULL);
+        }
+    }
+    int* ptr2 = arg2 == NULL ? NULL : (int*)env->GetDirectBufferAddress(arg2);
+    jintArray arr2 = NULL;
+    if (arg2 != NULL && ptr2 == NULL) {
+        arr2 = (jintArray)env->CallObjectMethod(arg2, JavaCPP_arrayMID);
+        if (env->ExceptionOccurred() != NULL) {
+            env->ExceptionClear();
+        } else {
+            ptr2 = arr2 == NULL ? NULL : env->GetIntArrayElements(arr2, NULL);
+        }
+    }
+    int* ptr8 = arg8 == NULL ? NULL : (int*)env->GetDirectBufferAddress(arg8);
+    jintArray arr8 = NULL;
+    if (arg8 != NULL && ptr8 == NULL) {
+        arr8 = (jintArray)env->CallObjectMethod(arg8, JavaCPP_arrayMID);
+        if (env->ExceptionOccurred() != NULL) {
+            env->ExceptionClear();
+        } else {
+            ptr8 = arr8 == NULL ? NULL : env->GetIntArrayElements(arr8, NULL);
+        }
+    }
+    jthrowable exc = NULL;
+    try {
+        ptr->indexed_copy((const double*)ptr0, (int64_t)arg1, (const int*)ptr2, arg3, arg4, (int64_t)arg5, (think::byte_buffer::Datatype::Enum)arg6, (int64_t)arg7, (const int*)ptr8, arg9, arg10, (int64_t)arg11);
+    } catch (...) {
+        exc = JavaCPP_handleException(env, 18);
+    }
+
+    if (arr0 != NULL) env->ReleaseDoubleArrayElements(arr0, (jdouble*)ptr0, JNI_ABORT);
+    if (arr2 != NULL) env->ReleaseIntArrayElements(arr2, (jint*)ptr2, JNI_ABORT);
+    if (arr8 != NULL) env->ReleaseIntArrayElements(arr8, (jint*)ptr8, JNI_ABORT);
+    if (exc != NULL) {
+        env->Throw(exc);
+    }
+}
+JNIEXPORT void JNICALL Java_think_byte_1buffer_ByteBuffer_00024BufferManager_indexed_1copy___3DJ_3IIIJIJ_3IIIJ(JNIEnv* env, jobject obj, jdoubleArray arg0, jlong arg1, jintArray arg2, jint arg3, jint arg4, jlong arg5, jint arg6, jlong arg7, jintArray arg8, jint arg9, jint arg10, jlong arg11) {
+    ::think::byte_buffer::BufferManager* ptr = (::think::byte_buffer::BufferManager*)jlong_to_ptr(env->GetLongField(obj, JavaCPP_addressFID));
+    if (ptr == NULL) {
+        env->ThrowNew(JavaCPP_getClass(env, 17), "This pointer address is NULL.");
+        return;
+    }
+    jlong position = env->GetLongField(obj, JavaCPP_positionFID);
+    ptr += position;
+    double* ptr0 = arg0 == NULL ? NULL : env->GetDoubleArrayElements(arg0, NULL);
+    int* ptr2 = arg2 == NULL ? NULL : env->GetIntArrayElements(arg2, NULL);
+    int* ptr8 = arg8 == NULL ? NULL : env->GetIntArrayElements(arg8, NULL);
+    jthrowable exc = NULL;
+    try {
+        ptr->indexed_copy((const double*)ptr0, (int64_t)arg1, (const int*)ptr2, arg3, arg4, (int64_t)arg5, (think::byte_buffer::Datatype::Enum)arg6, (int64_t)arg7, (const int*)ptr8, arg9, arg10, (int64_t)arg11);
+    } catch (...) {
+        exc = JavaCPP_handleException(env, 18);
+    }
+
+    if (arg0 != NULL) env->ReleaseDoubleArrayElements(arg0, (jdouble*)ptr0, JNI_ABORT);
+    if (arg2 != NULL) env->ReleaseIntArrayElements(arg2, (jint*)ptr2, JNI_ABORT);
+    if (arg8 != NULL) env->ReleaseIntArrayElements(arg8, (jint*)ptr8, JNI_ABORT);
+    if (exc != NULL) {
+        env->Throw(exc);
+    }
+}
+JNIEXPORT void JNICALL Java_think_byte_1buffer_ByteBuffer_00024BufferManager_indexed_1copy__JIJLorg_bytedeco_javacpp_IntPointer_2IIJIJLorg_bytedeco_javacpp_IntPointer_2IIJ(JNIEnv* env, jobject obj, jlong arg0, jint arg1, jlong arg2, jobject arg3, jint arg4, jint arg5, jlong arg6, jint arg7, jlong arg8, jobject arg9, jint arg10, jint arg11, jlong arg12) {
+    ::think::byte_buffer::BufferManager* ptr = (::think::byte_buffer::BufferManager*)jlong_to_ptr(env->GetLongField(obj, JavaCPP_addressFID));
+    if (ptr == NULL) {
+        env->ThrowNew(JavaCPP_getClass(env, 17), "This pointer address is NULL.");
+        return;
+    }
+    jlong position = env->GetLongField(obj, JavaCPP_positionFID);
+    ptr += position;
+    int* ptr3 = arg3 == NULL ? NULL : (int*)jlong_to_ptr(env->GetLongField(arg3, JavaCPP_addressFID));
+    jlong position3 = arg3 == NULL ? 0 : env->GetLongField(arg3, JavaCPP_positionFID);
+    ptr3 += position3;
+    int* ptr9 = arg9 == NULL ? NULL : (int*)jlong_to_ptr(env->GetLongField(arg9, JavaCPP_addressFID));
+    jlong position9 = arg9 == NULL ? 0 : env->GetLongField(arg9, JavaCPP_positionFID);
+    ptr9 += position9;
+    jthrowable exc = NULL;
+    try {
+        ptr->indexed_copy((int64_t)arg0, (think::byte_buffer::Datatype::Enum)arg1, (int64_t)arg2, (const int*)ptr3, arg4, arg5, (int64_t)arg6, (think::byte_buffer::Datatype::Enum)arg7, (int64_t)arg8, (const int*)ptr9, arg10, arg11, (int64_t)arg12);
+    } catch (...) {
+        exc = JavaCPP_handleException(env, 18);
+    }
+
+    if (exc != NULL) {
+        env->Throw(exc);
+    }
+}
+JNIEXPORT void JNICALL Java_think_byte_1buffer_ByteBuffer_00024BufferManager_indexed_1copy__JIJLjava_nio_IntBuffer_2IIJIJLjava_nio_IntBuffer_2IIJ(JNIEnv* env, jobject obj, jlong arg0, jint arg1, jlong arg2, jobject arg3, jint arg4, jint arg5, jlong arg6, jint arg7, jlong arg8, jobject arg9, jint arg10, jint arg11, jlong arg12) {
+    ::think::byte_buffer::BufferManager* ptr = (::think::byte_buffer::BufferManager*)jlong_to_ptr(env->GetLongField(obj, JavaCPP_addressFID));
+    if (ptr == NULL) {
+        env->ThrowNew(JavaCPP_getClass(env, 17), "This pointer address is NULL.");
+        return;
+    }
+    jlong position = env->GetLongField(obj, JavaCPP_positionFID);
+    ptr += position;
+    int* ptr3 = arg3 == NULL ? NULL : (int*)env->GetDirectBufferAddress(arg3);
+    jintArray arr3 = NULL;
+    if (arg3 != NULL && ptr3 == NULL) {
+        arr3 = (jintArray)env->CallObjectMethod(arg3, JavaCPP_arrayMID);
+        if (env->ExceptionOccurred() != NULL) {
+            env->ExceptionClear();
+        } else {
+            ptr3 = arr3 == NULL ? NULL : env->GetIntArrayElements(arr3, NULL);
+        }
+    }
+    int* ptr9 = arg9 == NULL ? NULL : (int*)env->GetDirectBufferAddress(arg9);
+    jintArray arr9 = NULL;
+    if (arg9 != NULL && ptr9 == NULL) {
+        arr9 = (jintArray)env->CallObjectMethod(arg9, JavaCPP_arrayMID);
+        if (env->ExceptionOccurred() != NULL) {
+            env->ExceptionClear();
+        } else {
+            ptr9 = arr9 == NULL ? NULL : env->GetIntArrayElements(arr9, NULL);
+        }
+    }
+    jthrowable exc = NULL;
+    try {
+        ptr->indexed_copy((int64_t)arg0, (think::byte_buffer::Datatype::Enum)arg1, (int64_t)arg2, (const int*)ptr3, arg4, arg5, (int64_t)arg6, (think::byte_buffer::Datatype::Enum)arg7, (int64_t)arg8, (const int*)ptr9, arg10, arg11, (int64_t)arg12);
+    } catch (...) {
+        exc = JavaCPP_handleException(env, 18);
+    }
+
+    if (arr3 != NULL) env->ReleaseIntArrayElements(arr3, (jint*)ptr3, JNI_ABORT);
+    if (arr9 != NULL) env->ReleaseIntArrayElements(arr9, (jint*)ptr9, JNI_ABORT);
+    if (exc != NULL) {
+        env->Throw(exc);
+    }
+}
+JNIEXPORT void JNICALL Java_think_byte_1buffer_ByteBuffer_00024BufferManager_indexed_1copy__JIJ_3IIIJIJ_3IIIJ(JNIEnv* env, jobject obj, jlong arg0, jint arg1, jlong arg2, jintArray arg3, jint arg4, jint arg5, jlong arg6, jint arg7, jlong arg8, jintArray arg9, jint arg10, jint arg11, jlong arg12) {
+    ::think::byte_buffer::BufferManager* ptr = (::think::byte_buffer::BufferManager*)jlong_to_ptr(env->GetLongField(obj, JavaCPP_addressFID));
+    if (ptr == NULL) {
+        env->ThrowNew(JavaCPP_getClass(env, 17), "This pointer address is NULL.");
+        return;
+    }
+    jlong position = env->GetLongField(obj, JavaCPP_positionFID);
+    ptr += position;
+    int* ptr3 = arg3 == NULL ? NULL : env->GetIntArrayElements(arg3, NULL);
+    int* ptr9 = arg9 == NULL ? NULL : env->GetIntArrayElements(arg9, NULL);
+    jthrowable exc = NULL;
+    try {
+        ptr->indexed_copy((int64_t)arg0, (think::byte_buffer::Datatype::Enum)arg1, (int64_t)arg2, (const int*)ptr3, arg4, arg5, (int64_t)arg6, (think::byte_buffer::Datatype::Enum)arg7, (int64_t)arg8, (const int*)ptr9, arg10, arg11, (int64_t)arg12);
+    } catch (...) {
+        exc = JavaCPP_handleException(env, 18);
+    }
+
+    if (arg3 != NULL) env->ReleaseIntArrayElements(arg3, (jint*)ptr3, JNI_ABORT);
+    if (arg9 != NULL) env->ReleaseIntArrayElements(arg9, (jint*)ptr9, JNI_ABORT);
+    if (exc != NULL) {
+        env->Throw(exc);
+    }
+}
+JNIEXPORT void JNICALL Java_think_byte_1buffer_ByteBuffer_00024BufferManager_indexed_1copy__JIJLorg_bytedeco_javacpp_IntPointer_2IILorg_bytedeco_javacpp_IntPointer_2JLorg_bytedeco_javacpp_IntPointer_2IIJ(JNIEnv* env, jobject obj, jlong arg0, jint arg1, jlong arg2, jobject arg3, jint arg4, jint arg5, jobject arg6, jlong arg7, jobject arg8, jint arg9, jint arg10, jlong arg11) {
+    ::think::byte_buffer::BufferManager* ptr = (::think::byte_buffer::BufferManager*)jlong_to_ptr(env->GetLongField(obj, JavaCPP_addressFID));
+    if (ptr == NULL) {
+        env->ThrowNew(JavaCPP_getClass(env, 17), "This pointer address is NULL.");
+        return;
+    }
+    jlong position = env->GetLongField(obj, JavaCPP_positionFID);
+    ptr += position;
+    int* ptr3 = arg3 == NULL ? NULL : (int*)jlong_to_ptr(env->GetLongField(arg3, JavaCPP_addressFID));
+    jlong position3 = arg3 == NULL ? 0 : env->GetLongField(arg3, JavaCPP_positionFID);
+    ptr3 += position3;
+    int* ptr6 = arg6 == NULL ? NULL : (int*)jlong_to_ptr(env->GetLongField(arg6, JavaCPP_addressFID));
+    jlong position6 = arg6 == NULL ? 0 : env->GetLongField(arg6, JavaCPP_positionFID);
+    ptr6 += position6;
+    int* ptr8 = arg8 == NULL ? NULL : (int*)jlong_to_ptr(env->GetLongField(arg8, JavaCPP_addressFID));
+    jlong position8 = arg8 == NULL ? 0 : env->GetLongField(arg8, JavaCPP_positionFID);
+    ptr8 += position8;
+    jthrowable exc = NULL;
+    try {
+        ptr->indexed_copy((int64_t)arg0, (think::byte_buffer::Datatype::Enum)arg1, (int64_t)arg2, (const int*)ptr3, arg4, arg5, ptr6, (int64_t)arg7, (const int*)ptr8, arg9, arg10, (int64_t)arg11);
+    } catch (...) {
+        exc = JavaCPP_handleException(env, 18);
+    }
+
+    if (exc != NULL) {
+        env->Throw(exc);
+    }
+}
+JNIEXPORT void JNICALL Java_think_byte_1buffer_ByteBuffer_00024BufferManager_indexed_1copy___3JJ_3IIIJIJ_3IIIJ(JNIEnv* env, jobject obj, jlongArray arg0, jlong arg1, jintArray arg2, jint arg3, jint arg4, jlong arg5, jint arg6, jlong arg7, jintArray arg8, jint arg9, jint arg10, jlong arg11) {
+    ::think::byte_buffer::BufferManager* ptr = (::think::byte_buffer::BufferManager*)jlong_to_ptr(env->GetLongField(obj, JavaCPP_addressFID));
+    if (ptr == NULL) {
+        env->ThrowNew(JavaCPP_getClass(env, 17), "This pointer address is NULL.");
+        return;
+    }
+    jlong position = env->GetLongField(obj, JavaCPP_positionFID);
+    ptr += position;
+    jlong* ptr0 = arg0 == NULL ? NULL : env->GetLongArrayElements(arg0, NULL);
+    int* ptr2 = arg2 == NULL ? NULL : env->GetIntArrayElements(arg2, NULL);
+    int* ptr8 = arg8 == NULL ? NULL : env->GetIntArrayElements(arg8, NULL);
+    jthrowable exc = NULL;
+    try {
+        ptr->indexed_copy((const int64_t*)ptr0, (int64_t)arg1, (const int*)ptr2, arg3, arg4, (int64_t)arg5, (think::byte_buffer::Datatype::Enum)arg6, (int64_t)arg7, (const int*)ptr8, arg9, arg10, (int64_t)arg11);
+    } catch (...) {
+        exc = JavaCPP_handleException(env, 18);
+    }
+
+    if (arg0 != NULL) env->ReleaseLongArrayElements(arg0, (jlong*)ptr0, JNI_ABORT);
+    if (arg2 != NULL) env->ReleaseIntArrayElements(arg2, (jint*)ptr2, JNI_ABORT);
+    if (arg8 != NULL) env->ReleaseIntArrayElements(arg8, (jint*)ptr8, JNI_ABORT);
+    if (exc != NULL) {
+        env->Throw(exc);
+    }
+}
+JNIEXPORT void JNICALL Java_think_byte_1buffer_ByteBuffer_00024BufferManager_indexed_1copy__Lorg_bytedeco_javacpp_FloatPointer_2JLorg_bytedeco_javacpp_IntPointer_2IIJIJLorg_bytedeco_javacpp_IntPointer_2IIJ(JNIEnv* env, jobject obj, jobject arg0, jlong arg1, jobject arg2, jint arg3, jint arg4, jlong arg5, jint arg6, jlong arg7, jobject arg8, jint arg9, jint arg10, jlong arg11) {
+    ::think::byte_buffer::BufferManager* ptr = (::think::byte_buffer::BufferManager*)jlong_to_ptr(env->GetLongField(obj, JavaCPP_addressFID));
+    if (ptr == NULL) {
+        env->ThrowNew(JavaCPP_getClass(env, 17), "This pointer address is NULL.");
+        return;
+    }
+    jlong position = env->GetLongField(obj, JavaCPP_positionFID);
+    ptr += position;
+    float* ptr0 = arg0 == NULL ? NULL : (float*)jlong_to_ptr(env->GetLongField(arg0, JavaCPP_addressFID));
+    jlong position0 = arg0 == NULL ? 0 : env->GetLongField(arg0, JavaCPP_positionFID);
+    ptr0 += position0;
+    int* ptr2 = arg2 == NULL ? NULL : (int*)jlong_to_ptr(env->GetLongField(arg2, JavaCPP_addressFID));
+    jlong position2 = arg2 == NULL ? 0 : env->GetLongField(arg2, JavaCPP_positionFID);
+    ptr2 += position2;
+    int* ptr8 = arg8 == NULL ? NULL : (int*)jlong_to_ptr(env->GetLongField(arg8, JavaCPP_addressFID));
+    jlong position8 = arg8 == NULL ? 0 : env->GetLongField(arg8, JavaCPP_positionFID);
+    ptr8 += position8;
+    jthrowable exc = NULL;
+    try {
+        ptr->indexed_copy((const float*)ptr0, (int64_t)arg1, (const int*)ptr2, arg3, arg4, (int64_t)arg5, (think::byte_buffer::Datatype::Enum)arg6, (int64_t)arg7, (const int*)ptr8, arg9, arg10, (int64_t)arg11);
+    } catch (...) {
+        exc = JavaCPP_handleException(env, 18);
+    }
+
+    if (exc != NULL) {
+        env->Throw(exc);
+    }
+}
+JNIEXPORT void JNICALL Java_think_byte_1buffer_ByteBuffer_00024BufferManager_indexed_1copy__Ljava_nio_FloatBuffer_2JLjava_nio_IntBuffer_2IIJIJLjava_nio_IntBuffer_2IIJ(JNIEnv* env, jobject obj, jobject arg0, jlong arg1, jobject arg2, jint arg3, jint arg4, jlong arg5, jint arg6, jlong arg7, jobject arg8, jint arg9, jint arg10, jlong arg11) {
+    ::think::byte_buffer::BufferManager* ptr = (::think::byte_buffer::BufferManager*)jlong_to_ptr(env->GetLongField(obj, JavaCPP_addressFID));
+    if (ptr == NULL) {
+        env->ThrowNew(JavaCPP_getClass(env, 17), "This pointer address is NULL.");
+        return;
+    }
+    jlong position = env->GetLongField(obj, JavaCPP_positionFID);
+    ptr += position;
+    float* ptr0 = arg0 == NULL ? NULL : (float*)env->GetDirectBufferAddress(arg0);
+    jfloatArray arr0 = NULL;
+    if (arg0 != NULL && ptr0 == NULL) {
+        arr0 = (jfloatArray)env->CallObjectMethod(arg0, JavaCPP_arrayMID);
+        if (env->ExceptionOccurred() != NULL) {
+            env->ExceptionClear();
+        } else {
+            ptr0 = arr0 == NULL ? NULL : env->GetFloatArrayElements(arr0, NULL);
+        }
+    }
+    int* ptr2 = arg2 == NULL ? NULL : (int*)env->GetDirectBufferAddress(arg2);
+    jintArray arr2 = NULL;
+    if (arg2 != NULL && ptr2 == NULL) {
+        arr2 = (jintArray)env->CallObjectMethod(arg2, JavaCPP_arrayMID);
+        if (env->ExceptionOccurred() != NULL) {
+            env->ExceptionClear();
+        } else {
+            ptr2 = arr2 == NULL ? NULL : env->GetIntArrayElements(arr2, NULL);
+        }
+    }
+    int* ptr8 = arg8 == NULL ? NULL : (int*)env->GetDirectBufferAddress(arg8);
+    jintArray arr8 = NULL;
+    if (arg8 != NULL && ptr8 == NULL) {
+        arr8 = (jintArray)env->CallObjectMethod(arg8, JavaCPP_arrayMID);
+        if (env->ExceptionOccurred() != NULL) {
+            env->ExceptionClear();
+        } else {
+            ptr8 = arr8 == NULL ? NULL : env->GetIntArrayElements(arr8, NULL);
+        }
+    }
+    jthrowable exc = NULL;
+    try {
+        ptr->indexed_copy((const float*)ptr0, (int64_t)arg1, (const int*)ptr2, arg3, arg4, (int64_t)arg5, (think::byte_buffer::Datatype::Enum)arg6, (int64_t)arg7, (const int*)ptr8, arg9, arg10, (int64_t)arg11);
+    } catch (...) {
+        exc = JavaCPP_handleException(env, 18);
+    }
+
+    if (arr0 != NULL) env->ReleaseFloatArrayElements(arr0, (jfloat*)ptr0, JNI_ABORT);
+    if (arr2 != NULL) env->ReleaseIntArrayElements(arr2, (jint*)ptr2, JNI_ABORT);
+    if (arr8 != NULL) env->ReleaseIntArrayElements(arr8, (jint*)ptr8, JNI_ABORT);
+    if (exc != NULL) {
+        env->Throw(exc);
+    }
+}
+JNIEXPORT void JNICALL Java_think_byte_1buffer_ByteBuffer_00024BufferManager_indexed_1copy___3FJ_3IIIJIJ_3IIIJ(JNIEnv* env, jobject obj, jfloatArray arg0, jlong arg1, jintArray arg2, jint arg3, jint arg4, jlong arg5, jint arg6, jlong arg7, jintArray arg8, jint arg9, jint arg10, jlong arg11) {
+    ::think::byte_buffer::BufferManager* ptr = (::think::byte_buffer::BufferManager*)jlong_to_ptr(env->GetLongField(obj, JavaCPP_addressFID));
+    if (ptr == NULL) {
+        env->ThrowNew(JavaCPP_getClass(env, 17), "This pointer address is NULL.");
+        return;
+    }
+    jlong position = env->GetLongField(obj, JavaCPP_positionFID);
+    ptr += position;
+    float* ptr0 = arg0 == NULL ? NULL : env->GetFloatArrayElements(arg0, NULL);
+    int* ptr2 = arg2 == NULL ? NULL : env->GetIntArrayElements(arg2, NULL);
+    int* ptr8 = arg8 == NULL ? NULL : env->GetIntArrayElements(arg8, NULL);
+    jthrowable exc = NULL;
+    try {
+        ptr->indexed_copy((const float*)ptr0, (int64_t)arg1, (const int*)ptr2, arg3, arg4, (int64_t)arg5, (think::byte_buffer::Datatype::Enum)arg6, (int64_t)arg7, (const int*)ptr8, arg9, arg10, (int64_t)arg11);
+    } catch (...) {
+        exc = JavaCPP_handleException(env, 18);
+    }
+
+    if (arg0 != NULL) env->ReleaseFloatArrayElements(arg0, (jfloat*)ptr0, JNI_ABORT);
+    if (arg2 != NULL) env->ReleaseIntArrayElements(arg2, (jint*)ptr2, JNI_ABORT);
+    if (arg8 != NULL) env->ReleaseIntArrayElements(arg8, (jint*)ptr8, JNI_ABORT);
+    if (exc != NULL) {
+        env->Throw(exc);
+    }
+}
+JNIEXPORT void JNICALL Java_think_byte_1buffer_ByteBuffer_00024BufferManager_indexed_1copy__Lorg_bytedeco_javacpp_DoublePointer_2JLorg_bytedeco_javacpp_IntPointer_2IIJIJLorg_bytedeco_javacpp_IntPointer_2IIJ(JNIEnv* env, jobject obj, jobject arg0, jlong arg1, jobject arg2, jint arg3, jint arg4, jlong arg5, jint arg6, jlong arg7, jobject arg8, jint arg9, jint arg10, jlong arg11) {
+    ::think::byte_buffer::BufferManager* ptr = (::think::byte_buffer::BufferManager*)jlong_to_ptr(env->GetLongField(obj, JavaCPP_addressFID));
+    if (ptr == NULL) {
+        env->ThrowNew(JavaCPP_getClass(env, 17), "This pointer address is NULL.");
+        return;
+    }
+    jlong position = env->GetLongField(obj, JavaCPP_positionFID);
+    ptr += position;
+    double* ptr0 = arg0 == NULL ? NULL : (double*)jlong_to_ptr(env->GetLongField(arg0, JavaCPP_addressFID));
+    jlong position0 = arg0 == NULL ? 0 : env->GetLongField(arg0, JavaCPP_positionFID);
+    ptr0 += position0;
+    int* ptr2 = arg2 == NULL ? NULL : (int*)jlong_to_ptr(env->GetLongField(arg2, JavaCPP_addressFID));
+    jlong position2 = arg2 == NULL ? 0 : env->GetLongField(arg2, JavaCPP_positionFID);
+    ptr2 += position2;
+    int* ptr8 = arg8 == NULL ? NULL : (int*)jlong_to_ptr(env->GetLongField(arg8, JavaCPP_addressFID));
+    jlong position8 = arg8 == NULL ? 0 : env->GetLongField(arg8, JavaCPP_positionFID);
+    ptr8 += position8;
+    jthrowable exc = NULL;
+    try {
+        ptr->indexed_copy((const double*)ptr0, (int64_t)arg1, (const int*)ptr2, arg3, arg4, (int64_t)arg5, (think::byte_buffer::Datatype::Enum)arg6, (int64_t)arg7, (const int*)ptr8, arg9, arg10, (int64_t)arg11);
+    } catch (...) {
+        exc = JavaCPP_handleException(env, 18);
+    }
+
+    if (exc != NULL) {
+        env->Throw(exc);
+    }
+}
+JNIEXPORT void JNICALL Java_think_byte_1buffer_ByteBuffer_00024BufferManager_set_1value__JIJJJ(JNIEnv* env, jobject obj, jlong arg0, jint arg1, jlong arg2, jlong arg3, jlong arg4) {
     ::think::byte_buffer::BufferManager* ptr = (::think::byte_buffer::BufferManager*)jlong_to_ptr(env->GetLongField(obj, JavaCPP_addressFID));
     if (ptr == NULL) {
         env->ThrowNew(JavaCPP_getClass(env, 17), "This pointer address is NULL.");
@@ -1524,7 +2815,7 @@ JNIEXPORT void JNICALL Java_think_byte_1buffer_ByteBuffer_00024BufferManager_set
     ptr += position;
     jthrowable exc = NULL;
     try {
-        ptr->set_value((int64_t)arg0, (think::byte_buffer::Datatype::Enum)arg1, (int64_t)arg2, arg3, (int64_t)arg4);
+        ptr->set_value((int64_t)arg0, (think::byte_buffer::Datatype::Enum)arg1, (int64_t)arg2, (int64_t)arg3, (int64_t)arg4);
     } catch (...) {
         exc = JavaCPP_handleException(env, 18);
     }
@@ -1552,7 +2843,7 @@ JNIEXPORT void JNICALL Java_think_byte_1buffer_ByteBuffer_00024BufferManager_set
         env->Throw(exc);
     }
 }
-JNIEXPORT void JNICALL Java_think_byte_1buffer_ByteBuffer_00024BufferManager_set_1value__JIJSJ(JNIEnv* env, jobject obj, jlong arg0, jint arg1, jlong arg2, jshort arg3, jlong arg4) {
+JNIEXPORT void JNICALL Java_think_byte_1buffer_ByteBuffer_00024BufferManager_set_1value__JIJFJ(JNIEnv* env, jobject obj, jlong arg0, jint arg1, jlong arg2, jfloat arg3, jlong arg4) {
     ::think::byte_buffer::BufferManager* ptr = (::think::byte_buffer::BufferManager*)jlong_to_ptr(env->GetLongField(obj, JavaCPP_addressFID));
     if (ptr == NULL) {
         env->ThrowNew(JavaCPP_getClass(env, 17), "This pointer address is NULL.");
@@ -1590,7 +2881,7 @@ JNIEXPORT void JNICALL Java_think_byte_1buffer_ByteBuffer_00024BufferManager_set
         env->Throw(exc);
     }
 }
-JNIEXPORT void JNICALL Java_think_byte_1buffer_ByteBuffer_00024BufferManager_set_1value__JIJJJ(JNIEnv* env, jobject obj, jlong arg0, jint arg1, jlong arg2, jlong arg3, jlong arg4) {
+JNIEXPORT void JNICALL Java_think_byte_1buffer_ByteBuffer_00024BufferManager_set_1value__JIJSJ(JNIEnv* env, jobject obj, jlong arg0, jint arg1, jlong arg2, jshort arg3, jlong arg4) {
     ::think::byte_buffer::BufferManager* ptr = (::think::byte_buffer::BufferManager*)jlong_to_ptr(env->GetLongField(obj, JavaCPP_addressFID));
     if (ptr == NULL) {
         env->ThrowNew(JavaCPP_getClass(env, 17), "This pointer address is NULL.");
@@ -1600,7 +2891,26 @@ JNIEXPORT void JNICALL Java_think_byte_1buffer_ByteBuffer_00024BufferManager_set
     ptr += position;
     jthrowable exc = NULL;
     try {
-        ptr->set_value((int64_t)arg0, (think::byte_buffer::Datatype::Enum)arg1, (int64_t)arg2, (int64_t)arg3, (int64_t)arg4);
+        ptr->set_value((int64_t)arg0, (think::byte_buffer::Datatype::Enum)arg1, (int64_t)arg2, arg3, (int64_t)arg4);
+    } catch (...) {
+        exc = JavaCPP_handleException(env, 18);
+    }
+
+    if (exc != NULL) {
+        env->Throw(exc);
+    }
+}
+JNIEXPORT void JNICALL Java_think_byte_1buffer_ByteBuffer_00024BufferManager_set_1value__JIJBJ(JNIEnv* env, jobject obj, jlong arg0, jint arg1, jlong arg2, jbyte arg3, jlong arg4) {
+    ::think::byte_buffer::BufferManager* ptr = (::think::byte_buffer::BufferManager*)jlong_to_ptr(env->GetLongField(obj, JavaCPP_addressFID));
+    if (ptr == NULL) {
+        env->ThrowNew(JavaCPP_getClass(env, 17), "This pointer address is NULL.");
+        return;
+    }
+    jlong position = env->GetLongField(obj, JavaCPP_positionFID);
+    ptr += position;
+    jthrowable exc = NULL;
+    try {
+        ptr->set_value((int64_t)arg0, (think::byte_buffer::Datatype::Enum)arg1, (int64_t)arg2, (think::byte_buffer::BufferManager::byte_t)arg3, (int64_t)arg4);
     } catch (...) {
         exc = JavaCPP_handleException(env, 18);
     }
@@ -1620,7 +2930,7 @@ JNIEXPORT jbyte JNICALL Java_think_byte_1buffer_ByteBuffer_00024BufferManager_ge
     jbyte rarg = 0;
     jthrowable exc = NULL;
     try {
-        unsigned char rvalue = (unsigned char)ptr->get_value_int8((int64_t)arg0, (think::byte_buffer::Datatype::Enum)arg1, (int64_t)arg2);
+        think::byte_buffer::BufferManager::byte_t rvalue = (think::byte_buffer::BufferManager::byte_t)ptr->get_value_int8((int64_t)arg0, (think::byte_buffer::Datatype::Enum)arg1, (int64_t)arg2);
         rarg = (jbyte)rvalue;
     } catch (...) {
         exc = JavaCPP_handleException(env, 18);
@@ -1830,6 +3140,25 @@ JNIEXPORT jlong JNICALL Java_think_byte_1buffer_ByteBuffer_00024BufferManager_al
     }
     return rarg;
 }
+JNIEXPORT void JNICALL Java_think_byte_1buffer_ByteBuffer_00024BufferManager_release_1buffer(JNIEnv* env, jobject obj, jlong arg0) {
+    ::think::byte_buffer::BufferManager* ptr = (::think::byte_buffer::BufferManager*)jlong_to_ptr(env->GetLongField(obj, JavaCPP_addressFID));
+    if (ptr == NULL) {
+        env->ThrowNew(JavaCPP_getClass(env, 17), "This pointer address is NULL.");
+        return;
+    }
+    jlong position = env->GetLongField(obj, JavaCPP_positionFID);
+    ptr += position;
+    jthrowable exc = NULL;
+    try {
+        ptr->release_buffer((int64_t)arg0);
+    } catch (...) {
+        exc = JavaCPP_handleException(env, 18);
+    }
+
+    if (exc != NULL) {
+        env->Throw(exc);
+    }
+}
 JNIEXPORT void JNICALL Java_think_byte_1buffer_ByteBuffer_00024BufferManager_copy__JIJLorg_bytedeco_javacpp_FloatPointer_2JJ(JNIEnv* env, jobject obj, jlong arg0, jint arg1, jlong arg2, jobject arg3, jlong arg4, jlong arg5) {
     ::think::byte_buffer::BufferManager* ptr = (::think::byte_buffer::BufferManager*)jlong_to_ptr(env->GetLongField(obj, JavaCPP_addressFID));
     if (ptr == NULL) {
@@ -1946,7 +3275,7 @@ JNIEXPORT void JNICALL Java_think_byte_1buffer_ByteBuffer_00024BufferManager_cop
         env->Throw(exc);
     }
 }
-JNIEXPORT void JNICALL Java_think_byte_1buffer_ByteBuffer_00024BufferManager_copy__Lorg_bytedeco_javacpp_DoublePointer_2JJIJJ(JNIEnv* env, jobject obj, jobject arg0, jlong arg1, jlong arg2, jint arg3, jlong arg4, jlong arg5) {
+JNIEXPORT void JNICALL Java_think_byte_1buffer_ByteBuffer_00024BufferManager_copy__JIJ_3DJJ(JNIEnv* env, jobject obj, jlong arg0, jint arg1, jlong arg2, jdoubleArray arg3, jlong arg4, jlong arg5) {
     ::think::byte_buffer::BufferManager* ptr = (::think::byte_buffer::BufferManager*)jlong_to_ptr(env->GetLongField(obj, JavaCPP_addressFID));
     if (ptr == NULL) {
         env->ThrowNew(JavaCPP_getClass(env, 17), "This pointer address is NULL.");
@@ -1954,21 +3283,20 @@ JNIEXPORT void JNICALL Java_think_byte_1buffer_ByteBuffer_00024BufferManager_cop
     }
     jlong position = env->GetLongField(obj, JavaCPP_positionFID);
     ptr += position;
-    double* ptr0 = arg0 == NULL ? NULL : (double*)jlong_to_ptr(env->GetLongField(arg0, JavaCPP_addressFID));
-    jlong position0 = arg0 == NULL ? 0 : env->GetLongField(arg0, JavaCPP_positionFID);
-    ptr0 += position0;
+    double* ptr3 = arg3 == NULL ? NULL : env->GetDoubleArrayElements(arg3, NULL);
     jthrowable exc = NULL;
     try {
-        ptr->copy((const double*)ptr0, (int64_t)arg1, (int64_t)arg2, (think::byte_buffer::Datatype::Enum)arg3, (int64_t)arg4, (int64_t)arg5);
+        ptr->copy((int64_t)arg0, (think::byte_buffer::Datatype::Enum)arg1, (int64_t)arg2, ptr3, (int64_t)arg4, (int64_t)arg5);
     } catch (...) {
         exc = JavaCPP_handleException(env, 18);
     }
 
+    if (arg3 != NULL) env->ReleaseDoubleArrayElements(arg3, (jdouble*)ptr3, 0);
     if (exc != NULL) {
         env->Throw(exc);
     }
 }
-JNIEXPORT void JNICALL Java_think_byte_1buffer_ByteBuffer_00024BufferManager_copy__Ljava_nio_DoubleBuffer_2JJIJJ(JNIEnv* env, jobject obj, jobject arg0, jlong arg1, jlong arg2, jint arg3, jlong arg4, jlong arg5) {
+JNIEXPORT void JNICALL Java_think_byte_1buffer_ByteBuffer_00024BufferManager_copy__JIJLjava_nio_DoubleBuffer_2JJ(JNIEnv* env, jobject obj, jlong arg0, jint arg1, jlong arg2, jobject arg3, jlong arg4, jlong arg5) {
     ::think::byte_buffer::BufferManager* ptr = (::think::byte_buffer::BufferManager*)jlong_to_ptr(env->GetLongField(obj, JavaCPP_addressFID));
     if (ptr == NULL) {
         env->ThrowNew(JavaCPP_getClass(env, 17), "This pointer address is NULL.");
@@ -1976,29 +3304,29 @@ JNIEXPORT void JNICALL Java_think_byte_1buffer_ByteBuffer_00024BufferManager_cop
     }
     jlong position = env->GetLongField(obj, JavaCPP_positionFID);
     ptr += position;
-    double* ptr0 = arg0 == NULL ? NULL : (double*)env->GetDirectBufferAddress(arg0);
-    jdoubleArray arr0 = NULL;
-    if (arg0 != NULL && ptr0 == NULL) {
-        arr0 = (jdoubleArray)env->CallObjectMethod(arg0, JavaCPP_arrayMID);
+    double* ptr3 = arg3 == NULL ? NULL : (double*)env->GetDirectBufferAddress(arg3);
+    jdoubleArray arr3 = NULL;
+    if (arg3 != NULL && ptr3 == NULL) {
+        arr3 = (jdoubleArray)env->CallObjectMethod(arg3, JavaCPP_arrayMID);
         if (env->ExceptionOccurred() != NULL) {
             env->ExceptionClear();
         } else {
-            ptr0 = arr0 == NULL ? NULL : env->GetDoubleArrayElements(arr0, NULL);
+            ptr3 = arr3 == NULL ? NULL : env->GetDoubleArrayElements(arr3, NULL);
         }
     }
     jthrowable exc = NULL;
     try {
-        ptr->copy((const double*)ptr0, (int64_t)arg1, (int64_t)arg2, (think::byte_buffer::Datatype::Enum)arg3, (int64_t)arg4, (int64_t)arg5);
+        ptr->copy((int64_t)arg0, (think::byte_buffer::Datatype::Enum)arg1, (int64_t)arg2, ptr3, (int64_t)arg4, (int64_t)arg5);
     } catch (...) {
         exc = JavaCPP_handleException(env, 18);
     }
 
-    if (arr0 != NULL) env->ReleaseDoubleArrayElements(arr0, (jdouble*)ptr0, JNI_ABORT);
+    if (arr3 != NULL) env->ReleaseDoubleArrayElements(arr3, (jdouble*)ptr3, 0);
     if (exc != NULL) {
         env->Throw(exc);
     }
 }
-JNIEXPORT void JNICALL Java_think_byte_1buffer_ByteBuffer_00024BufferManager_copy___3DJJIJJ(JNIEnv* env, jobject obj, jdoubleArray arg0, jlong arg1, jlong arg2, jint arg3, jlong arg4, jlong arg5) {
+JNIEXPORT void JNICALL Java_think_byte_1buffer_ByteBuffer_00024BufferManager_copy__JIJLorg_bytedeco_javacpp_DoublePointer_2JJ(JNIEnv* env, jobject obj, jlong arg0, jint arg1, jlong arg2, jobject arg3, jlong arg4, jlong arg5) {
     ::think::byte_buffer::BufferManager* ptr = (::think::byte_buffer::BufferManager*)jlong_to_ptr(env->GetLongField(obj, JavaCPP_addressFID));
     if (ptr == NULL) {
         env->ThrowNew(JavaCPP_getClass(env, 17), "This pointer address is NULL.");
@@ -2006,20 +3334,21 @@ JNIEXPORT void JNICALL Java_think_byte_1buffer_ByteBuffer_00024BufferManager_cop
     }
     jlong position = env->GetLongField(obj, JavaCPP_positionFID);
     ptr += position;
-    double* ptr0 = arg0 == NULL ? NULL : env->GetDoubleArrayElements(arg0, NULL);
+    double* ptr3 = arg3 == NULL ? NULL : (double*)jlong_to_ptr(env->GetLongField(arg3, JavaCPP_addressFID));
+    jlong position3 = arg3 == NULL ? 0 : env->GetLongField(arg3, JavaCPP_positionFID);
+    ptr3 += position3;
     jthrowable exc = NULL;
     try {
-        ptr->copy((const double*)ptr0, (int64_t)arg1, (int64_t)arg2, (think::byte_buffer::Datatype::Enum)arg3, (int64_t)arg4, (int64_t)arg5);
+        ptr->copy((int64_t)arg0, (think::byte_buffer::Datatype::Enum)arg1, (int64_t)arg2, ptr3, (int64_t)arg4, (int64_t)arg5);
     } catch (...) {
         exc = JavaCPP_handleException(env, 18);
     }
 
-    if (arg0 != NULL) env->ReleaseDoubleArrayElements(arg0, (jdouble*)ptr0, JNI_ABORT);
     if (exc != NULL) {
         env->Throw(exc);
     }
 }
-JNIEXPORT void JNICALL Java_think_byte_1buffer_ByteBuffer_00024BufferManager_copy__JIJJIJJ(JNIEnv* env, jobject obj, jlong arg0, jint arg1, jlong arg2, jlong arg3, jint arg4, jlong arg5, jlong arg6) {
+JNIEXPORT void JNICALL Java_think_byte_1buffer_ByteBuffer_00024BufferManager_copy__JIJ_3FJJ(JNIEnv* env, jobject obj, jlong arg0, jint arg1, jlong arg2, jfloatArray arg3, jlong arg4, jlong arg5) {
     ::think::byte_buffer::BufferManager* ptr = (::think::byte_buffer::BufferManager*)jlong_to_ptr(env->GetLongField(obj, JavaCPP_addressFID));
     if (ptr == NULL) {
         env->ThrowNew(JavaCPP_getClass(env, 17), "This pointer address is NULL.");
@@ -2027,13 +3356,15 @@ JNIEXPORT void JNICALL Java_think_byte_1buffer_ByteBuffer_00024BufferManager_cop
     }
     jlong position = env->GetLongField(obj, JavaCPP_positionFID);
     ptr += position;
+    float* ptr3 = arg3 == NULL ? NULL : env->GetFloatArrayElements(arg3, NULL);
     jthrowable exc = NULL;
     try {
-        ptr->copy((int64_t)arg0, (think::byte_buffer::Datatype::Enum)arg1, (int64_t)arg2, (int64_t)arg3, (think::byte_buffer::Datatype::Enum)arg4, (int64_t)arg5, (int64_t)arg6);
+        ptr->copy((int64_t)arg0, (think::byte_buffer::Datatype::Enum)arg1, (int64_t)arg2, ptr3, (int64_t)arg4, (int64_t)arg5);
     } catch (...) {
         exc = JavaCPP_handleException(env, 18);
     }
 
+    if (arg3 != NULL) env->ReleaseFloatArrayElements(arg3, (jfloat*)ptr3, 0);
     if (exc != NULL) {
         env->Throw(exc);
     }
@@ -2101,7 +3432,7 @@ JNIEXPORT void JNICALL Java_think_byte_1buffer_ByteBuffer_00024BufferManager_cop
     signed char* ptr3 = arg3 == NULL ? NULL : env->GetByteArrayElements(arg3, NULL);
     jthrowable exc = NULL;
     try {
-        ptr->copy((int64_t)arg0, (think::byte_buffer::Datatype::Enum)arg1, (int64_t)arg2, (unsigned char*)ptr3, (int64_t)arg4, (int64_t)arg5);
+        ptr->copy((int64_t)arg0, (think::byte_buffer::Datatype::Enum)arg1, (int64_t)arg2, (think::byte_buffer::BufferManager::byte_t*)ptr3, (int64_t)arg4, (int64_t)arg5);
     } catch (...) {
         exc = JavaCPP_handleException(env, 18);
     }
@@ -2122,7 +3453,7 @@ JNIEXPORT void JNICALL Java_think_byte_1buffer_ByteBuffer_00024BufferManager_cop
     jobject ptr3 = arg3;
     jthrowable exc = NULL;
     try {
-        ptr->copy((int64_t)arg0, (think::byte_buffer::Datatype::Enum)arg1, (int64_t)arg2, (unsigned char*)ptr3, (int64_t)arg4, (int64_t)arg5);
+        ptr->copy((int64_t)arg0, (think::byte_buffer::Datatype::Enum)arg1, (int64_t)arg2, (think::byte_buffer::BufferManager::byte_t*)ptr3, (int64_t)arg4, (int64_t)arg5);
     } catch (...) {
         exc = JavaCPP_handleException(env, 18);
     }
@@ -2144,7 +3475,7 @@ JNIEXPORT void JNICALL Java_think_byte_1buffer_ByteBuffer_00024BufferManager_cop
     ptr3 += position3;
     jthrowable exc = NULL;
     try {
-        ptr->copy((int64_t)arg0, (think::byte_buffer::Datatype::Enum)arg1, (int64_t)arg2, (unsigned char*)ptr3, (int64_t)arg4, (int64_t)arg5);
+        ptr->copy((int64_t)arg0, (think::byte_buffer::Datatype::Enum)arg1, (int64_t)arg2, (think::byte_buffer::BufferManager::byte_t*)ptr3, (int64_t)arg4, (int64_t)arg5);
     } catch (...) {
         exc = JavaCPP_handleException(env, 18);
     }
@@ -2153,7 +3484,7 @@ JNIEXPORT void JNICALL Java_think_byte_1buffer_ByteBuffer_00024BufferManager_cop
         env->Throw(exc);
     }
 }
-JNIEXPORT void JNICALL Java_think_byte_1buffer_ByteBuffer_00024BufferManager_copy__Lorg_bytedeco_javacpp_IntPointer_2JJIJJ(JNIEnv* env, jobject obj, jobject arg0, jlong arg1, jlong arg2, jint arg3, jlong arg4, jlong arg5) {
+JNIEXPORT void JNICALL Java_think_byte_1buffer_ByteBuffer_00024BufferManager_copy__Lorg_bytedeco_javacpp_BytePointer_2JJIJJ(JNIEnv* env, jobject obj, jobject arg0, jlong arg1, jlong arg2, jint arg3, jlong arg4, jlong arg5) {
     ::think::byte_buffer::BufferManager* ptr = (::think::byte_buffer::BufferManager*)jlong_to_ptr(env->GetLongField(obj, JavaCPP_addressFID));
     if (ptr == NULL) {
         env->ThrowNew(JavaCPP_getClass(env, 17), "This pointer address is NULL.");
@@ -2161,12 +3492,12 @@ JNIEXPORT void JNICALL Java_think_byte_1buffer_ByteBuffer_00024BufferManager_cop
     }
     jlong position = env->GetLongField(obj, JavaCPP_positionFID);
     ptr += position;
-    int* ptr0 = arg0 == NULL ? NULL : (int*)jlong_to_ptr(env->GetLongField(arg0, JavaCPP_addressFID));
+    signed char* ptr0 = arg0 == NULL ? NULL : (signed char*)jlong_to_ptr(env->GetLongField(arg0, JavaCPP_addressFID));
     jlong position0 = arg0 == NULL ? 0 : env->GetLongField(arg0, JavaCPP_positionFID);
     ptr0 += position0;
     jthrowable exc = NULL;
     try {
-        ptr->copy((const int*)ptr0, (int64_t)arg1, (int64_t)arg2, (think::byte_buffer::Datatype::Enum)arg3, (int64_t)arg4, (int64_t)arg5);
+        ptr->copy((const think::byte_buffer::BufferManager::byte_t*)ptr0, (int64_t)arg1, (int64_t)arg2, (think::byte_buffer::Datatype::Enum)arg3, (int64_t)arg4, (int64_t)arg5);
     } catch (...) {
         exc = JavaCPP_handleException(env, 18);
     }
@@ -2278,7 +3609,7 @@ JNIEXPORT void JNICALL Java_think_byte_1buffer_ByteBuffer_00024BufferManager_cop
         env->Throw(exc);
     }
 }
-JNIEXPORT void JNICALL Java_think_byte_1buffer_ByteBuffer_00024BufferManager_copy__Lthink_byte_1buffer_ByteBuffer_2JJIJJ(JNIEnv* env, jobject obj, jobject arg0, jlong arg1, jlong arg2, jint arg3, jlong arg4, jlong arg5) {
+JNIEXPORT void JNICALL Java_think_byte_1buffer_ByteBuffer_00024BufferManager_copy__Ljava_nio_FloatBuffer_2JJIJJ(JNIEnv* env, jobject obj, jobject arg0, jlong arg1, jlong arg2, jint arg3, jlong arg4, jlong arg5) {
     ::think::byte_buffer::BufferManager* ptr = (::think::byte_buffer::BufferManager*)jlong_to_ptr(env->GetLongField(obj, JavaCPP_addressFID));
     if (ptr == NULL) {
         env->ThrowNew(JavaCPP_getClass(env, 17), "This pointer address is NULL.");
@@ -2286,92 +3617,29 @@ JNIEXPORT void JNICALL Java_think_byte_1buffer_ByteBuffer_00024BufferManager_cop
     }
     jlong position = env->GetLongField(obj, JavaCPP_positionFID);
     ptr += position;
-    jobject ptr0 = arg0;
-    jthrowable exc = NULL;
-    try {
-        ptr->copy((const unsigned char*)ptr0, (int64_t)arg1, (int64_t)arg2, (think::byte_buffer::Datatype::Enum)arg3, (int64_t)arg4, (int64_t)arg5);
-    } catch (...) {
-        exc = JavaCPP_handleException(env, 18);
-    }
-
-    if (exc != NULL) {
-        env->Throw(exc);
-    }
-}
-JNIEXPORT void JNICALL Java_think_byte_1buffer_ByteBuffer_00024BufferManager_copy___3BJJIJJ(JNIEnv* env, jobject obj, jbyteArray arg0, jlong arg1, jlong arg2, jint arg3, jlong arg4, jlong arg5) {
-    ::think::byte_buffer::BufferManager* ptr = (::think::byte_buffer::BufferManager*)jlong_to_ptr(env->GetLongField(obj, JavaCPP_addressFID));
-    if (ptr == NULL) {
-        env->ThrowNew(JavaCPP_getClass(env, 17), "This pointer address is NULL.");
-        return;
-    }
-    jlong position = env->GetLongField(obj, JavaCPP_positionFID);
-    ptr += position;
-    signed char* ptr0 = arg0 == NULL ? NULL : env->GetByteArrayElements(arg0, NULL);
-    jthrowable exc = NULL;
-    try {
-        ptr->copy((const unsigned char*)ptr0, (int64_t)arg1, (int64_t)arg2, (think::byte_buffer::Datatype::Enum)arg3, (int64_t)arg4, (int64_t)arg5);
-    } catch (...) {
-        exc = JavaCPP_handleException(env, 18);
-    }
-
-    if (arg0 != NULL) env->ReleaseByteArrayElements(arg0, (jbyte*)ptr0, JNI_ABORT);
-    if (exc != NULL) {
-        env->Throw(exc);
-    }
-}
-JNIEXPORT void JNICALL Java_think_byte_1buffer_ByteBuffer_00024BufferManager_copy__Lorg_bytedeco_javacpp_ShortPointer_2JJIJJ(JNIEnv* env, jobject obj, jobject arg0, jlong arg1, jlong arg2, jint arg3, jlong arg4, jlong arg5) {
-    ::think::byte_buffer::BufferManager* ptr = (::think::byte_buffer::BufferManager*)jlong_to_ptr(env->GetLongField(obj, JavaCPP_addressFID));
-    if (ptr == NULL) {
-        env->ThrowNew(JavaCPP_getClass(env, 17), "This pointer address is NULL.");
-        return;
-    }
-    jlong position = env->GetLongField(obj, JavaCPP_positionFID);
-    ptr += position;
-    short* ptr0 = arg0 == NULL ? NULL : (short*)jlong_to_ptr(env->GetLongField(arg0, JavaCPP_addressFID));
-    jlong position0 = arg0 == NULL ? 0 : env->GetLongField(arg0, JavaCPP_positionFID);
-    ptr0 += position0;
-    jthrowable exc = NULL;
-    try {
-        ptr->copy((const short*)ptr0, (int64_t)arg1, (int64_t)arg2, (think::byte_buffer::Datatype::Enum)arg3, (int64_t)arg4, (int64_t)arg5);
-    } catch (...) {
-        exc = JavaCPP_handleException(env, 18);
-    }
-
-    if (exc != NULL) {
-        env->Throw(exc);
-    }
-}
-JNIEXPORT void JNICALL Java_think_byte_1buffer_ByteBuffer_00024BufferManager_copy__Ljava_nio_ShortBuffer_2JJIJJ(JNIEnv* env, jobject obj, jobject arg0, jlong arg1, jlong arg2, jint arg3, jlong arg4, jlong arg5) {
-    ::think::byte_buffer::BufferManager* ptr = (::think::byte_buffer::BufferManager*)jlong_to_ptr(env->GetLongField(obj, JavaCPP_addressFID));
-    if (ptr == NULL) {
-        env->ThrowNew(JavaCPP_getClass(env, 17), "This pointer address is NULL.");
-        return;
-    }
-    jlong position = env->GetLongField(obj, JavaCPP_positionFID);
-    ptr += position;
-    short* ptr0 = arg0 == NULL ? NULL : (short*)env->GetDirectBufferAddress(arg0);
-    jshortArray arr0 = NULL;
+    float* ptr0 = arg0 == NULL ? NULL : (float*)env->GetDirectBufferAddress(arg0);
+    jfloatArray arr0 = NULL;
     if (arg0 != NULL && ptr0 == NULL) {
-        arr0 = (jshortArray)env->CallObjectMethod(arg0, JavaCPP_arrayMID);
+        arr0 = (jfloatArray)env->CallObjectMethod(arg0, JavaCPP_arrayMID);
         if (env->ExceptionOccurred() != NULL) {
             env->ExceptionClear();
         } else {
-            ptr0 = arr0 == NULL ? NULL : env->GetShortArrayElements(arr0, NULL);
+            ptr0 = arr0 == NULL ? NULL : env->GetFloatArrayElements(arr0, NULL);
         }
     }
     jthrowable exc = NULL;
     try {
-        ptr->copy((const short*)ptr0, (int64_t)arg1, (int64_t)arg2, (think::byte_buffer::Datatype::Enum)arg3, (int64_t)arg4, (int64_t)arg5);
+        ptr->copy((const float*)ptr0, (int64_t)arg1, (int64_t)arg2, (think::byte_buffer::Datatype::Enum)arg3, (int64_t)arg4, (int64_t)arg5);
     } catch (...) {
         exc = JavaCPP_handleException(env, 18);
     }
 
-    if (arr0 != NULL) env->ReleaseShortArrayElements(arr0, (jshort*)ptr0, JNI_ABORT);
+    if (arr0 != NULL) env->ReleaseFloatArrayElements(arr0, (jfloat*)ptr0, JNI_ABORT);
     if (exc != NULL) {
         env->Throw(exc);
     }
 }
-JNIEXPORT void JNICALL Java_think_byte_1buffer_ByteBuffer_00024BufferManager_copy___3SJJIJJ(JNIEnv* env, jobject obj, jshortArray arg0, jlong arg1, jlong arg2, jint arg3, jlong arg4, jlong arg5) {
+JNIEXPORT void JNICALL Java_think_byte_1buffer_ByteBuffer_00024BufferManager_copy__Lorg_bytedeco_javacpp_FloatPointer_2JJIJJ(JNIEnv* env, jobject obj, jobject arg0, jlong arg1, jlong arg2, jint arg3, jlong arg4, jlong arg5) {
     ::think::byte_buffer::BufferManager* ptr = (::think::byte_buffer::BufferManager*)jlong_to_ptr(env->GetLongField(obj, JavaCPP_addressFID));
     if (ptr == NULL) {
         env->ThrowNew(JavaCPP_getClass(env, 17), "This pointer address is NULL.");
@@ -2379,110 +3647,37 @@ JNIEXPORT void JNICALL Java_think_byte_1buffer_ByteBuffer_00024BufferManager_cop
     }
     jlong position = env->GetLongField(obj, JavaCPP_positionFID);
     ptr += position;
-    short* ptr0 = arg0 == NULL ? NULL : env->GetShortArrayElements(arg0, NULL);
-    jthrowable exc = NULL;
-    try {
-        ptr->copy((const short*)ptr0, (int64_t)arg1, (int64_t)arg2, (think::byte_buffer::Datatype::Enum)arg3, (int64_t)arg4, (int64_t)arg5);
-    } catch (...) {
-        exc = JavaCPP_handleException(env, 18);
-    }
-
-    if (arg0 != NULL) env->ReleaseShortArrayElements(arg0, (jshort*)ptr0, JNI_ABORT);
-    if (exc != NULL) {
-        env->Throw(exc);
-    }
-}
-JNIEXPORT void JNICALL Java_think_byte_1buffer_ByteBuffer_00024BufferManager_copy__JIJLorg_bytedeco_javacpp_DoublePointer_2JJ(JNIEnv* env, jobject obj, jlong arg0, jint arg1, jlong arg2, jobject arg3, jlong arg4, jlong arg5) {
-    ::think::byte_buffer::BufferManager* ptr = (::think::byte_buffer::BufferManager*)jlong_to_ptr(env->GetLongField(obj, JavaCPP_addressFID));
-    if (ptr == NULL) {
-        env->ThrowNew(JavaCPP_getClass(env, 17), "This pointer address is NULL.");
-        return;
-    }
-    jlong position = env->GetLongField(obj, JavaCPP_positionFID);
-    ptr += position;
-    double* ptr3 = arg3 == NULL ? NULL : (double*)jlong_to_ptr(env->GetLongField(arg3, JavaCPP_addressFID));
-    jlong position3 = arg3 == NULL ? 0 : env->GetLongField(arg3, JavaCPP_positionFID);
-    ptr3 += position3;
-    jthrowable exc = NULL;
-    try {
-        ptr->copy((int64_t)arg0, (think::byte_buffer::Datatype::Enum)arg1, (int64_t)arg2, ptr3, (int64_t)arg4, (int64_t)arg5);
-    } catch (...) {
-        exc = JavaCPP_handleException(env, 18);
-    }
-
-    if (exc != NULL) {
-        env->Throw(exc);
-    }
-}
-JNIEXPORT void JNICALL Java_think_byte_1buffer_ByteBuffer_00024BufferManager_copy__JIJLjava_nio_DoubleBuffer_2JJ(JNIEnv* env, jobject obj, jlong arg0, jint arg1, jlong arg2, jobject arg3, jlong arg4, jlong arg5) {
-    ::think::byte_buffer::BufferManager* ptr = (::think::byte_buffer::BufferManager*)jlong_to_ptr(env->GetLongField(obj, JavaCPP_addressFID));
-    if (ptr == NULL) {
-        env->ThrowNew(JavaCPP_getClass(env, 17), "This pointer address is NULL.");
-        return;
-    }
-    jlong position = env->GetLongField(obj, JavaCPP_positionFID);
-    ptr += position;
-    double* ptr3 = arg3 == NULL ? NULL : (double*)env->GetDirectBufferAddress(arg3);
-    jdoubleArray arr3 = NULL;
-    if (arg3 != NULL && ptr3 == NULL) {
-        arr3 = (jdoubleArray)env->CallObjectMethod(arg3, JavaCPP_arrayMID);
-        if (env->ExceptionOccurred() != NULL) {
-            env->ExceptionClear();
-        } else {
-            ptr3 = arr3 == NULL ? NULL : env->GetDoubleArrayElements(arr3, NULL);
-        }
-    }
-    jthrowable exc = NULL;
-    try {
-        ptr->copy((int64_t)arg0, (think::byte_buffer::Datatype::Enum)arg1, (int64_t)arg2, ptr3, (int64_t)arg4, (int64_t)arg5);
-    } catch (...) {
-        exc = JavaCPP_handleException(env, 18);
-    }
-
-    if (arr3 != NULL) env->ReleaseDoubleArrayElements(arr3, (jdouble*)ptr3, 0);
-    if (exc != NULL) {
-        env->Throw(exc);
-    }
-}
-JNIEXPORT void JNICALL Java_think_byte_1buffer_ByteBuffer_00024BufferManager_copy__JIJ_3DJJ(JNIEnv* env, jobject obj, jlong arg0, jint arg1, jlong arg2, jdoubleArray arg3, jlong arg4, jlong arg5) {
-    ::think::byte_buffer::BufferManager* ptr = (::think::byte_buffer::BufferManager*)jlong_to_ptr(env->GetLongField(obj, JavaCPP_addressFID));
-    if (ptr == NULL) {
-        env->ThrowNew(JavaCPP_getClass(env, 17), "This pointer address is NULL.");
-        return;
-    }
-    jlong position = env->GetLongField(obj, JavaCPP_positionFID);
-    ptr += position;
-    double* ptr3 = arg3 == NULL ? NULL : env->GetDoubleArrayElements(arg3, NULL);
-    jthrowable exc = NULL;
-    try {
-        ptr->copy((int64_t)arg0, (think::byte_buffer::Datatype::Enum)arg1, (int64_t)arg2, ptr3, (int64_t)arg4, (int64_t)arg5);
-    } catch (...) {
-        exc = JavaCPP_handleException(env, 18);
-    }
-
-    if (arg3 != NULL) env->ReleaseDoubleArrayElements(arg3, (jdouble*)ptr3, 0);
-    if (exc != NULL) {
-        env->Throw(exc);
-    }
-}
-JNIEXPORT void JNICALL Java_think_byte_1buffer_ByteBuffer_00024BufferManager_copy__Lorg_bytedeco_javacpp_BytePointer_2JJIJJ(JNIEnv* env, jobject obj, jobject arg0, jlong arg1, jlong arg2, jint arg3, jlong arg4, jlong arg5) {
-    ::think::byte_buffer::BufferManager* ptr = (::think::byte_buffer::BufferManager*)jlong_to_ptr(env->GetLongField(obj, JavaCPP_addressFID));
-    if (ptr == NULL) {
-        env->ThrowNew(JavaCPP_getClass(env, 17), "This pointer address is NULL.");
-        return;
-    }
-    jlong position = env->GetLongField(obj, JavaCPP_positionFID);
-    ptr += position;
-    signed char* ptr0 = arg0 == NULL ? NULL : (signed char*)jlong_to_ptr(env->GetLongField(arg0, JavaCPP_addressFID));
+    float* ptr0 = arg0 == NULL ? NULL : (float*)jlong_to_ptr(env->GetLongField(arg0, JavaCPP_addressFID));
     jlong position0 = arg0 == NULL ? 0 : env->GetLongField(arg0, JavaCPP_positionFID);
     ptr0 += position0;
     jthrowable exc = NULL;
     try {
-        ptr->copy((const unsigned char*)ptr0, (int64_t)arg1, (int64_t)arg2, (think::byte_buffer::Datatype::Enum)arg3, (int64_t)arg4, (int64_t)arg5);
+        ptr->copy((const float*)ptr0, (int64_t)arg1, (int64_t)arg2, (think::byte_buffer::Datatype::Enum)arg3, (int64_t)arg4, (int64_t)arg5);
     } catch (...) {
         exc = JavaCPP_handleException(env, 18);
     }
 
+    if (exc != NULL) {
+        env->Throw(exc);
+    }
+}
+JNIEXPORT void JNICALL Java_think_byte_1buffer_ByteBuffer_00024BufferManager_copy___3JJJIJJ(JNIEnv* env, jobject obj, jlongArray arg0, jlong arg1, jlong arg2, jint arg3, jlong arg4, jlong arg5) {
+    ::think::byte_buffer::BufferManager* ptr = (::think::byte_buffer::BufferManager*)jlong_to_ptr(env->GetLongField(obj, JavaCPP_addressFID));
+    if (ptr == NULL) {
+        env->ThrowNew(JavaCPP_getClass(env, 17), "This pointer address is NULL.");
+        return;
+    }
+    jlong position = env->GetLongField(obj, JavaCPP_positionFID);
+    ptr += position;
+    jlong* ptr0 = arg0 == NULL ? NULL : env->GetLongArrayElements(arg0, NULL);
+    jthrowable exc = NULL;
+    try {
+        ptr->copy((const int64_t*)ptr0, (int64_t)arg1, (int64_t)arg2, (think::byte_buffer::Datatype::Enum)arg3, (int64_t)arg4, (int64_t)arg5);
+    } catch (...) {
+        exc = JavaCPP_handleException(env, 18);
+    }
+
+    if (arg0 != NULL) env->ReleaseLongArrayElements(arg0, (jlong*)ptr0, JNI_ABORT);
     if (exc != NULL) {
         env->Throw(exc);
     }
@@ -2517,7 +3712,7 @@ JNIEXPORT void JNICALL Java_think_byte_1buffer_ByteBuffer_00024BufferManager_cop
         env->Throw(exc);
     }
 }
-JNIEXPORT void JNICALL Java_think_byte_1buffer_ByteBuffer_00024BufferManager_copy___3JJJIJJ(JNIEnv* env, jobject obj, jlongArray arg0, jlong arg1, jlong arg2, jint arg3, jlong arg4, jlong arg5) {
+JNIEXPORT void JNICALL Java_think_byte_1buffer_ByteBuffer_00024BufferManager_copy__Lorg_bytedeco_javacpp_LongPointer_2JJIJJ(JNIEnv* env, jobject obj, jobject arg0, jlong arg1, jlong arg2, jint arg3, jlong arg4, jlong arg5) {
     ::think::byte_buffer::BufferManager* ptr = (::think::byte_buffer::BufferManager*)jlong_to_ptr(env->GetLongField(obj, JavaCPP_addressFID));
     if (ptr == NULL) {
         env->ThrowNew(JavaCPP_getClass(env, 17), "This pointer address is NULL.");
@@ -2525,7 +3720,9 @@ JNIEXPORT void JNICALL Java_think_byte_1buffer_ByteBuffer_00024BufferManager_cop
     }
     jlong position = env->GetLongField(obj, JavaCPP_positionFID);
     ptr += position;
-    jlong* ptr0 = arg0 == NULL ? NULL : env->GetLongArrayElements(arg0, NULL);
+    jlong* ptr0 = arg0 == NULL ? NULL : (jlong*)jlong_to_ptr(env->GetLongField(arg0, JavaCPP_addressFID));
+    jlong position0 = arg0 == NULL ? 0 : env->GetLongField(arg0, JavaCPP_positionFID);
+    ptr0 += position0;
     jthrowable exc = NULL;
     try {
         ptr->copy((const int64_t*)ptr0, (int64_t)arg1, (int64_t)arg2, (think::byte_buffer::Datatype::Enum)arg3, (int64_t)arg4, (int64_t)arg5);
@@ -2533,12 +3730,11 @@ JNIEXPORT void JNICALL Java_think_byte_1buffer_ByteBuffer_00024BufferManager_cop
         exc = JavaCPP_handleException(env, 18);
     }
 
-    if (arg0 != NULL) env->ReleaseLongArrayElements(arg0, (jlong*)ptr0, JNI_ABORT);
     if (exc != NULL) {
         env->Throw(exc);
     }
 }
-JNIEXPORT void JNICALL Java_think_byte_1buffer_ByteBuffer_00024BufferManager_copy__Lorg_bytedeco_javacpp_FloatPointer_2JJIJJ(JNIEnv* env, jobject obj, jobject arg0, jlong arg1, jlong arg2, jint arg3, jlong arg4, jlong arg5) {
+JNIEXPORT void JNICALL Java_think_byte_1buffer_ByteBuffer_00024BufferManager_copy___3DJJIJJ(JNIEnv* env, jobject obj, jdoubleArray arg0, jlong arg1, jlong arg2, jint arg3, jlong arg4, jlong arg5) {
     ::think::byte_buffer::BufferManager* ptr = (::think::byte_buffer::BufferManager*)jlong_to_ptr(env->GetLongField(obj, JavaCPP_addressFID));
     if (ptr == NULL) {
         env->ThrowNew(JavaCPP_getClass(env, 17), "This pointer address is NULL.");
@@ -2546,21 +3742,20 @@ JNIEXPORT void JNICALL Java_think_byte_1buffer_ByteBuffer_00024BufferManager_cop
     }
     jlong position = env->GetLongField(obj, JavaCPP_positionFID);
     ptr += position;
-    float* ptr0 = arg0 == NULL ? NULL : (float*)jlong_to_ptr(env->GetLongField(arg0, JavaCPP_addressFID));
-    jlong position0 = arg0 == NULL ? 0 : env->GetLongField(arg0, JavaCPP_positionFID);
-    ptr0 += position0;
+    double* ptr0 = arg0 == NULL ? NULL : env->GetDoubleArrayElements(arg0, NULL);
     jthrowable exc = NULL;
     try {
-        ptr->copy((const float*)ptr0, (int64_t)arg1, (int64_t)arg2, (think::byte_buffer::Datatype::Enum)arg3, (int64_t)arg4, (int64_t)arg5);
+        ptr->copy((const double*)ptr0, (int64_t)arg1, (int64_t)arg2, (think::byte_buffer::Datatype::Enum)arg3, (int64_t)arg4, (int64_t)arg5);
     } catch (...) {
         exc = JavaCPP_handleException(env, 18);
     }
 
+    if (arg0 != NULL) env->ReleaseDoubleArrayElements(arg0, (jdouble*)ptr0, JNI_ABORT);
     if (exc != NULL) {
         env->Throw(exc);
     }
 }
-JNIEXPORT void JNICALL Java_think_byte_1buffer_ByteBuffer_00024BufferManager_copy__Ljava_nio_FloatBuffer_2JJIJJ(JNIEnv* env, jobject obj, jobject arg0, jlong arg1, jlong arg2, jint arg3, jlong arg4, jlong arg5) {
+JNIEXPORT void JNICALL Java_think_byte_1buffer_ByteBuffer_00024BufferManager_copy__Ljava_nio_DoubleBuffer_2JJIJJ(JNIEnv* env, jobject obj, jobject arg0, jlong arg1, jlong arg2, jint arg3, jlong arg4, jlong arg5) {
     ::think::byte_buffer::BufferManager* ptr = (::think::byte_buffer::BufferManager*)jlong_to_ptr(env->GetLongField(obj, JavaCPP_addressFID));
     if (ptr == NULL) {
         env->ThrowNew(JavaCPP_getClass(env, 17), "This pointer address is NULL.");
@@ -2568,24 +3763,46 @@ JNIEXPORT void JNICALL Java_think_byte_1buffer_ByteBuffer_00024BufferManager_cop
     }
     jlong position = env->GetLongField(obj, JavaCPP_positionFID);
     ptr += position;
-    float* ptr0 = arg0 == NULL ? NULL : (float*)env->GetDirectBufferAddress(arg0);
-    jfloatArray arr0 = NULL;
+    double* ptr0 = arg0 == NULL ? NULL : (double*)env->GetDirectBufferAddress(arg0);
+    jdoubleArray arr0 = NULL;
     if (arg0 != NULL && ptr0 == NULL) {
-        arr0 = (jfloatArray)env->CallObjectMethod(arg0, JavaCPP_arrayMID);
+        arr0 = (jdoubleArray)env->CallObjectMethod(arg0, JavaCPP_arrayMID);
         if (env->ExceptionOccurred() != NULL) {
             env->ExceptionClear();
         } else {
-            ptr0 = arr0 == NULL ? NULL : env->GetFloatArrayElements(arr0, NULL);
+            ptr0 = arr0 == NULL ? NULL : env->GetDoubleArrayElements(arr0, NULL);
         }
     }
     jthrowable exc = NULL;
     try {
-        ptr->copy((const float*)ptr0, (int64_t)arg1, (int64_t)arg2, (think::byte_buffer::Datatype::Enum)arg3, (int64_t)arg4, (int64_t)arg5);
+        ptr->copy((const double*)ptr0, (int64_t)arg1, (int64_t)arg2, (think::byte_buffer::Datatype::Enum)arg3, (int64_t)arg4, (int64_t)arg5);
     } catch (...) {
         exc = JavaCPP_handleException(env, 18);
     }
 
-    if (arr0 != NULL) env->ReleaseFloatArrayElements(arr0, (jfloat*)ptr0, JNI_ABORT);
+    if (arr0 != NULL) env->ReleaseDoubleArrayElements(arr0, (jdouble*)ptr0, JNI_ABORT);
+    if (exc != NULL) {
+        env->Throw(exc);
+    }
+}
+JNIEXPORT void JNICALL Java_think_byte_1buffer_ByteBuffer_00024BufferManager_copy__Lorg_bytedeco_javacpp_DoublePointer_2JJIJJ(JNIEnv* env, jobject obj, jobject arg0, jlong arg1, jlong arg2, jint arg3, jlong arg4, jlong arg5) {
+    ::think::byte_buffer::BufferManager* ptr = (::think::byte_buffer::BufferManager*)jlong_to_ptr(env->GetLongField(obj, JavaCPP_addressFID));
+    if (ptr == NULL) {
+        env->ThrowNew(JavaCPP_getClass(env, 17), "This pointer address is NULL.");
+        return;
+    }
+    jlong position = env->GetLongField(obj, JavaCPP_positionFID);
+    ptr += position;
+    double* ptr0 = arg0 == NULL ? NULL : (double*)jlong_to_ptr(env->GetLongField(arg0, JavaCPP_addressFID));
+    jlong position0 = arg0 == NULL ? 0 : env->GetLongField(arg0, JavaCPP_positionFID);
+    ptr0 += position0;
+    jthrowable exc = NULL;
+    try {
+        ptr->copy((const double*)ptr0, (int64_t)arg1, (int64_t)arg2, (think::byte_buffer::Datatype::Enum)arg3, (int64_t)arg4, (int64_t)arg5);
+    } catch (...) {
+        exc = JavaCPP_handleException(env, 18);
+    }
+
     if (exc != NULL) {
         env->Throw(exc);
     }
@@ -2611,7 +3828,7 @@ JNIEXPORT void JNICALL Java_think_byte_1buffer_ByteBuffer_00024BufferManager_cop
         env->Throw(exc);
     }
 }
-JNIEXPORT void JNICALL Java_think_byte_1buffer_ByteBuffer_00024BufferManager_copy__JIJ_3FJJ(JNIEnv* env, jobject obj, jlong arg0, jint arg1, jlong arg2, jfloatArray arg3, jlong arg4, jlong arg5) {
+JNIEXPORT void JNICALL Java_think_byte_1buffer_ByteBuffer_00024BufferManager_copy__Ljava_nio_ShortBuffer_2JJIJJ(JNIEnv* env, jobject obj, jobject arg0, jlong arg1, jlong arg2, jint arg3, jlong arg4, jlong arg5) {
     ::think::byte_buffer::BufferManager* ptr = (::think::byte_buffer::BufferManager*)jlong_to_ptr(env->GetLongField(obj, JavaCPP_addressFID));
     if (ptr == NULL) {
         env->ThrowNew(JavaCPP_getClass(env, 17), "This pointer address is NULL.");
@@ -2619,15 +3836,127 @@ JNIEXPORT void JNICALL Java_think_byte_1buffer_ByteBuffer_00024BufferManager_cop
     }
     jlong position = env->GetLongField(obj, JavaCPP_positionFID);
     ptr += position;
-    float* ptr3 = arg3 == NULL ? NULL : env->GetFloatArrayElements(arg3, NULL);
+    short* ptr0 = arg0 == NULL ? NULL : (short*)env->GetDirectBufferAddress(arg0);
+    jshortArray arr0 = NULL;
+    if (arg0 != NULL && ptr0 == NULL) {
+        arr0 = (jshortArray)env->CallObjectMethod(arg0, JavaCPP_arrayMID);
+        if (env->ExceptionOccurred() != NULL) {
+            env->ExceptionClear();
+        } else {
+            ptr0 = arr0 == NULL ? NULL : env->GetShortArrayElements(arr0, NULL);
+        }
+    }
     jthrowable exc = NULL;
     try {
-        ptr->copy((int64_t)arg0, (think::byte_buffer::Datatype::Enum)arg1, (int64_t)arg2, ptr3, (int64_t)arg4, (int64_t)arg5);
+        ptr->copy((const short*)ptr0, (int64_t)arg1, (int64_t)arg2, (think::byte_buffer::Datatype::Enum)arg3, (int64_t)arg4, (int64_t)arg5);
     } catch (...) {
         exc = JavaCPP_handleException(env, 18);
     }
 
-    if (arg3 != NULL) env->ReleaseFloatArrayElements(arg3, (jfloat*)ptr3, 0);
+    if (arr0 != NULL) env->ReleaseShortArrayElements(arr0, (jshort*)ptr0, JNI_ABORT);
+    if (exc != NULL) {
+        env->Throw(exc);
+    }
+}
+JNIEXPORT void JNICALL Java_think_byte_1buffer_ByteBuffer_00024BufferManager_copy__Lorg_bytedeco_javacpp_ShortPointer_2JJIJJ(JNIEnv* env, jobject obj, jobject arg0, jlong arg1, jlong arg2, jint arg3, jlong arg4, jlong arg5) {
+    ::think::byte_buffer::BufferManager* ptr = (::think::byte_buffer::BufferManager*)jlong_to_ptr(env->GetLongField(obj, JavaCPP_addressFID));
+    if (ptr == NULL) {
+        env->ThrowNew(JavaCPP_getClass(env, 17), "This pointer address is NULL.");
+        return;
+    }
+    jlong position = env->GetLongField(obj, JavaCPP_positionFID);
+    ptr += position;
+    short* ptr0 = arg0 == NULL ? NULL : (short*)jlong_to_ptr(env->GetLongField(arg0, JavaCPP_addressFID));
+    jlong position0 = arg0 == NULL ? 0 : env->GetLongField(arg0, JavaCPP_positionFID);
+    ptr0 += position0;
+    jthrowable exc = NULL;
+    try {
+        ptr->copy((const short*)ptr0, (int64_t)arg1, (int64_t)arg2, (think::byte_buffer::Datatype::Enum)arg3, (int64_t)arg4, (int64_t)arg5);
+    } catch (...) {
+        exc = JavaCPP_handleException(env, 18);
+    }
+
+    if (exc != NULL) {
+        env->Throw(exc);
+    }
+}
+JNIEXPORT void JNICALL Java_think_byte_1buffer_ByteBuffer_00024BufferManager_copy___3BJJIJJ(JNIEnv* env, jobject obj, jbyteArray arg0, jlong arg1, jlong arg2, jint arg3, jlong arg4, jlong arg5) {
+    ::think::byte_buffer::BufferManager* ptr = (::think::byte_buffer::BufferManager*)jlong_to_ptr(env->GetLongField(obj, JavaCPP_addressFID));
+    if (ptr == NULL) {
+        env->ThrowNew(JavaCPP_getClass(env, 17), "This pointer address is NULL.");
+        return;
+    }
+    jlong position = env->GetLongField(obj, JavaCPP_positionFID);
+    ptr += position;
+    signed char* ptr0 = arg0 == NULL ? NULL : env->GetByteArrayElements(arg0, NULL);
+    jthrowable exc = NULL;
+    try {
+        ptr->copy((const think::byte_buffer::BufferManager::byte_t*)ptr0, (int64_t)arg1, (int64_t)arg2, (think::byte_buffer::Datatype::Enum)arg3, (int64_t)arg4, (int64_t)arg5);
+    } catch (...) {
+        exc = JavaCPP_handleException(env, 18);
+    }
+
+    if (arg0 != NULL) env->ReleaseByteArrayElements(arg0, (jbyte*)ptr0, JNI_ABORT);
+    if (exc != NULL) {
+        env->Throw(exc);
+    }
+}
+JNIEXPORT void JNICALL Java_think_byte_1buffer_ByteBuffer_00024BufferManager_copy__Lthink_byte_1buffer_ByteBuffer_2JJIJJ(JNIEnv* env, jobject obj, jobject arg0, jlong arg1, jlong arg2, jint arg3, jlong arg4, jlong arg5) {
+    ::think::byte_buffer::BufferManager* ptr = (::think::byte_buffer::BufferManager*)jlong_to_ptr(env->GetLongField(obj, JavaCPP_addressFID));
+    if (ptr == NULL) {
+        env->ThrowNew(JavaCPP_getClass(env, 17), "This pointer address is NULL.");
+        return;
+    }
+    jlong position = env->GetLongField(obj, JavaCPP_positionFID);
+    ptr += position;
+    jobject ptr0 = arg0;
+    jthrowable exc = NULL;
+    try {
+        ptr->copy((const think::byte_buffer::BufferManager::byte_t*)ptr0, (int64_t)arg1, (int64_t)arg2, (think::byte_buffer::Datatype::Enum)arg3, (int64_t)arg4, (int64_t)arg5);
+    } catch (...) {
+        exc = JavaCPP_handleException(env, 18);
+    }
+
+    if (exc != NULL) {
+        env->Throw(exc);
+    }
+}
+JNIEXPORT void JNICALL Java_think_byte_1buffer_ByteBuffer_00024BufferManager_copy__JIJJIJJ(JNIEnv* env, jobject obj, jlong arg0, jint arg1, jlong arg2, jlong arg3, jint arg4, jlong arg5, jlong arg6) {
+    ::think::byte_buffer::BufferManager* ptr = (::think::byte_buffer::BufferManager*)jlong_to_ptr(env->GetLongField(obj, JavaCPP_addressFID));
+    if (ptr == NULL) {
+        env->ThrowNew(JavaCPP_getClass(env, 17), "This pointer address is NULL.");
+        return;
+    }
+    jlong position = env->GetLongField(obj, JavaCPP_positionFID);
+    ptr += position;
+    jthrowable exc = NULL;
+    try {
+        ptr->copy((int64_t)arg0, (think::byte_buffer::Datatype::Enum)arg1, (int64_t)arg2, (int64_t)arg3, (think::byte_buffer::Datatype::Enum)arg4, (int64_t)arg5, (int64_t)arg6);
+    } catch (...) {
+        exc = JavaCPP_handleException(env, 18);
+    }
+
+    if (exc != NULL) {
+        env->Throw(exc);
+    }
+}
+JNIEXPORT void JNICALL Java_think_byte_1buffer_ByteBuffer_00024BufferManager_copy___3IJJIJJ(JNIEnv* env, jobject obj, jintArray arg0, jlong arg1, jlong arg2, jint arg3, jlong arg4, jlong arg5) {
+    ::think::byte_buffer::BufferManager* ptr = (::think::byte_buffer::BufferManager*)jlong_to_ptr(env->GetLongField(obj, JavaCPP_addressFID));
+    if (ptr == NULL) {
+        env->ThrowNew(JavaCPP_getClass(env, 17), "This pointer address is NULL.");
+        return;
+    }
+    jlong position = env->GetLongField(obj, JavaCPP_positionFID);
+    ptr += position;
+    int* ptr0 = arg0 == NULL ? NULL : env->GetIntArrayElements(arg0, NULL);
+    jthrowable exc = NULL;
+    try {
+        ptr->copy((const int*)ptr0, (int64_t)arg1, (int64_t)arg2, (think::byte_buffer::Datatype::Enum)arg3, (int64_t)arg4, (int64_t)arg5);
+    } catch (...) {
+        exc = JavaCPP_handleException(env, 18);
+    }
+
+    if (arg0 != NULL) env->ReleaseIntArrayElements(arg0, (jint*)ptr0, JNI_ABORT);
     if (exc != NULL) {
         env->Throw(exc);
     }
@@ -2662,7 +3991,7 @@ JNIEXPORT void JNICALL Java_think_byte_1buffer_ByteBuffer_00024BufferManager_cop
         env->Throw(exc);
     }
 }
-JNIEXPORT void JNICALL Java_think_byte_1buffer_ByteBuffer_00024BufferManager_copy___3IJJIJJ(JNIEnv* env, jobject obj, jintArray arg0, jlong arg1, jlong arg2, jint arg3, jlong arg4, jlong arg5) {
+JNIEXPORT void JNICALL Java_think_byte_1buffer_ByteBuffer_00024BufferManager_copy__Lorg_bytedeco_javacpp_IntPointer_2JJIJJ(JNIEnv* env, jobject obj, jobject arg0, jlong arg1, jlong arg2, jint arg3, jlong arg4, jlong arg5) {
     ::think::byte_buffer::BufferManager* ptr = (::think::byte_buffer::BufferManager*)jlong_to_ptr(env->GetLongField(obj, JavaCPP_addressFID));
     if (ptr == NULL) {
         env->ThrowNew(JavaCPP_getClass(env, 17), "This pointer address is NULL.");
@@ -2670,7 +3999,9 @@ JNIEXPORT void JNICALL Java_think_byte_1buffer_ByteBuffer_00024BufferManager_cop
     }
     jlong position = env->GetLongField(obj, JavaCPP_positionFID);
     ptr += position;
-    int* ptr0 = arg0 == NULL ? NULL : env->GetIntArrayElements(arg0, NULL);
+    int* ptr0 = arg0 == NULL ? NULL : (int*)jlong_to_ptr(env->GetLongField(arg0, JavaCPP_addressFID));
+    jlong position0 = arg0 == NULL ? 0 : env->GetLongField(arg0, JavaCPP_positionFID);
+    ptr0 += position0;
     jthrowable exc = NULL;
     try {
         ptr->copy((const int*)ptr0, (int64_t)arg1, (int64_t)arg2, (think::byte_buffer::Datatype::Enum)arg3, (int64_t)arg4, (int64_t)arg5);
@@ -2678,12 +4009,11 @@ JNIEXPORT void JNICALL Java_think_byte_1buffer_ByteBuffer_00024BufferManager_cop
         exc = JavaCPP_handleException(env, 18);
     }
 
-    if (arg0 != NULL) env->ReleaseIntArrayElements(arg0, (jint*)ptr0, JNI_ABORT);
     if (exc != NULL) {
         env->Throw(exc);
     }
 }
-JNIEXPORT void JNICALL Java_think_byte_1buffer_ByteBuffer_00024BufferManager_copy__Lorg_bytedeco_javacpp_LongPointer_2JJIJJ(JNIEnv* env, jobject obj, jobject arg0, jlong arg1, jlong arg2, jint arg3, jlong arg4, jlong arg5) {
+JNIEXPORT void JNICALL Java_think_byte_1buffer_ByteBuffer_00024BufferManager_copy___3SJJIJJ(JNIEnv* env, jobject obj, jshortArray arg0, jlong arg1, jlong arg2, jint arg3, jlong arg4, jlong arg5) {
     ::think::byte_buffer::BufferManager* ptr = (::think::byte_buffer::BufferManager*)jlong_to_ptr(env->GetLongField(obj, JavaCPP_addressFID));
     if (ptr == NULL) {
         env->ThrowNew(JavaCPP_getClass(env, 17), "This pointer address is NULL.");
@@ -2691,16 +4021,15 @@ JNIEXPORT void JNICALL Java_think_byte_1buffer_ByteBuffer_00024BufferManager_cop
     }
     jlong position = env->GetLongField(obj, JavaCPP_positionFID);
     ptr += position;
-    jlong* ptr0 = arg0 == NULL ? NULL : (jlong*)jlong_to_ptr(env->GetLongField(arg0, JavaCPP_addressFID));
-    jlong position0 = arg0 == NULL ? 0 : env->GetLongField(arg0, JavaCPP_positionFID);
-    ptr0 += position0;
+    short* ptr0 = arg0 == NULL ? NULL : env->GetShortArrayElements(arg0, NULL);
     jthrowable exc = NULL;
     try {
-        ptr->copy((const int64_t*)ptr0, (int64_t)arg1, (int64_t)arg2, (think::byte_buffer::Datatype::Enum)arg3, (int64_t)arg4, (int64_t)arg5);
+        ptr->copy((const short*)ptr0, (int64_t)arg1, (int64_t)arg2, (think::byte_buffer::Datatype::Enum)arg3, (int64_t)arg4, (int64_t)arg5);
     } catch (...) {
         exc = JavaCPP_handleException(env, 18);
     }
 
+    if (arg0 != NULL) env->ReleaseShortArrayElements(arg0, (jshort*)ptr0, JNI_ABORT);
     if (exc != NULL) {
         env->Throw(exc);
     }
